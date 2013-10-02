@@ -1,4 +1,10 @@
+# Backup files
+*.bak
+
 # Compiled Object files
+*.__i
+*.crf
+*.d
 *.slo
 *.lo
 *.o
