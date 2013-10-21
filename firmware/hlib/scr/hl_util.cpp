@@ -19,7 +19,10 @@
  */
 #include "hlib.h"
 
+//  Volatile variables  ////////////////////////
+volatile  uint32_t loopDelayCounter;
 
+///////////////////////////////////////////////
 /*
  * @brief Peforming delay by a finitive loop
  * @param numLoop Delay time
@@ -28,8 +31,9 @@
  * compiler's optimization appropriately so that it does not remove the loop
  */
 void HL_LoopDelay(uint32_t numLoop){
-  uint32_t count;
-  for (count=0; count<numLoop; count++);
+  for (loopDelayCounter=0; loopDelayCounter<numLoop; loopDelayCounter++){
+    /* TRICK: use volatile loopDelayCounter to prevent Compiler Optimization */
+  }
 }
 
 

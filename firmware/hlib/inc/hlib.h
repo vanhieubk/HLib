@@ -41,13 +41,14 @@
 #include "hl_def.h"
 #include "hl_util.h"
 #include "hl_uart_c.h"
-//#include "hl_adc_c.h"
+#include "hl_spi_i2s_c.h"
+#include "hl_adc_c.h"
 #include "hl_pins_c.h"
 #include "hl_leds_c.h"
 
 
 //  GLOBAL VARIABLES  ///////////////
-extern volatile uint8_t smallDelayCount; /* implement NOP instruction in C/C++ */
+extern volatile uint8_t optFreeVar; /* implement NOP instruction in C/C++ */
 
 
 //  GLOBAL OBJECTS  ///////////////

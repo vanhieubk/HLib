@@ -132,25 +132,20 @@ err_t  uart_c::Start(uint32_t baudRate){
 
 
 /**
-  * @brief Release I/O pins, stop UART clock
+  * @brief Stop UART clock
   * @return HL_OK, HL_INVALID
   */
 err_t  uart_c::Shutdown(){
-  GPIO_InitTypeDef  GPIO_InitStruct;
   
   _UART_CONSTRUCT_CHECK();
   
+  USART_Cmd(UARTx, DISABLE);
   switch (uartNum){
-    case 1:	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, DISABLE);
-	        GPIO_InitStruct.GPIO_Pin   = GPIO_Pin_9 | GPIO_Pin_10;
-		    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-		    GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
-		    GPIO_Init(GPIOA, &GPIO_InitStruct);
-			break;
-	case 2:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, DISABLE);	break;
-	case 3:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, DISABLE);	break;
-	case 4:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, DISABLE);	break;
-	case 5:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, DISABLE);	break;
+    case 1:	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, DISABLE); break;
+	  case 2:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, DISABLE);	break;
+	  case 3:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, DISABLE);	break;
+	  case 4:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,  DISABLE);	break;
+	  case 5:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5,  DISABLE);	break;
   }
   return HL_OK;
 }

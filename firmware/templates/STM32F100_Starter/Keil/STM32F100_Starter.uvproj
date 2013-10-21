@@ -551,6 +551,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\hlib\scr\hl_util.cpp</FilePath>
             </File>
+            <File>
+              <FileName>hl_spi_i2s_c.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\hlib\scr\hl_spi_i2s_c.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

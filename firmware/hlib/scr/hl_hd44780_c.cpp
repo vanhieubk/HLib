@@ -90,17 +90,17 @@ void hd44780_c::Write(uint8_t data, bool isCmd){
     GPIO_ResetBits(HD44780_DATA_PORT, HD44780_DATA_MASK);
     GPIO_SetBits( HD44780_DATA_PORT,  
                 ((uint16_t) (data & 0xF0)) << (HD44780_DATA_POS-4) );
-    smallDelayCount++; /* NOP */
+    optFreeVar++; /* NOP */
     GPIO_SetBits(HD44780_EN_PORT, HD44780_EN_PIN);
-    smallDelayCount++;
+    optFreeVar++;
     GPIO_ResetBits(HD44780_EN_PORT, HD44780_EN_PIN);
     
     /* write lower nibble */ 
     GPIO_ResetBits(HD44780_DATA_PORT, HD44780_DATA_MASK);
     GPIO_SetBits(HD44780_DATA_PORT,  ((uint16_t) (data & 0x0F))  << HD44780_DATA_POS );
-    smallDelayCount++;
+    optFreeVar++;
     GPIO_SetBits(HD44780_EN_PORT, HD44780_EN_PIN);
-    smallDelayCount++;
+    optFreeVar++;
     GPIO_ResetBits(HD44780_EN_PORT, HD44780_EN_PIN);
   #else
     #error "Unsupported platform"

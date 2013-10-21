@@ -21,7 +21,7 @@
 #include "hlib.h"
 
 //  GLOBAL VARIABLES  ///////////////
-volatile uint8_t smallDelayCount; 
+volatile uint8_t optFreeVar; 
 
 
 //  GLOBAL OBJECTs  //////////////

@@ -47,8 +47,8 @@ public:
   err_t     SetChannel(uint8_t channel, uint8_t convOrder);
 
   void      SetConvMode(bool singleConversion);
-  void      StartConv();
-  bool      HasData();
+  void      TriggerConv();
+  bool      ConvComplete();
   uint16_t  Get();
   void      SetWatchdog(uint16_t highThreshold, uint16_t lowThreshold);
   void      SetISR(ISR_ADCCallback cbFunction);

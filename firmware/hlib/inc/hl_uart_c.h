@@ -7,7 +7,6 @@
  * @date 01-09-2013
  *
  * @copyright
- * @copyright
  * This project and all its relevant hardware designs, documents, source codes, compiled libraries
  * belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
  * You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
@@ -19,7 +18,8 @@
  * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
  * @attention
  * This library always enable receiving feature. Current version only support polling receiving.
- * Interrupt receiving will be implemented in next version/n
+ * DMA transfer/receiver has not been supported\n.
+ * Interrupt receiving will be implemented in next version\n
  * This library does not support parity check. If you need this feature, please contact us.
  */
 
