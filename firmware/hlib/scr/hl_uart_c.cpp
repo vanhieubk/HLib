@@ -1,28 +1,28 @@
 /**
- * @file hl_uart_c.cpp
- * Implementing serial communication methods for USARTs in <b> HLib's MBoards  </b>
- *
- * @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- * @version 1.0
- * @date 01-09-2013
- *
- * @copyright
- * This project and all its relevant hardware designs, documents, source codes, compiled libraries
- * belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
- * You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
- * in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
- * SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
- * with respect to any claims arising from the content of hardware, firmware and/or the use 
- * made by customers of the coding information contained herein in connection with their products.\n
- * You are prohibited from commercializing in any kind that using or basing on these works
- * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- * @attention
- * This library always enables receiving feature.\n
- * Current version only supports polling receiving, only support USART1 and USART2\n.
- * Interrupt receiving will be implemented in next version/n
- * The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1\n
- * This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
- */
+ @file hl_uart_c.cpp
+ Implementing serial communication methods for USARTs in <b> HLib's MBoards  </b>
+
+ @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
+ @version 1.0
+ @date 01-09-2013
+
+ @copyright
+ This project and all its relevant hardware designs, documents, source codes, compiled libraries
+ belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
+ You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
+ in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
+ SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
+ with respect to any claims arising from the content of hardware, firmware and/or the use 
+ made by customers of the coding information contained herein in connection with their products.\n
+ You are prohibited from commercializing in any kind that using or basing on these works
+ without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+ @attention
+ This library always enables receiving feature.\n
+ Current version only supports polling receiving, only support USART1 and USART2\n.
+ Interrupt receiving will be implemented in next version/n
+ The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1\n
+ This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
+*/
 
 
 
@@ -39,10 +39,10 @@
 
 ////////////////////////////////////////////////////////////
 /**
-  * @brief Construction function
-  * @param uartNum UART will be used.   
-  * @return None
-  */
+ @brief Construction function
+ @param uartNum UART will be used.   
+ @return None
+*/
 uart_c::uart_c(uint8_t uartNum){
   switch (uartNum){
     #if defined(STM32F100C8_MCU)
@@ -64,12 +64,12 @@ uart_c::uart_c(uint8_t uartNum){
 
 
 
- /**
-  * @brief Start serial communicating
-  * @param baudRate UART's baud rate
-  * @param stopBit UART's stopBit
-  * @return HL_OK , HL_INVALID
-  */
+/**
+ @brief Start serial communicating
+ @param baudRate UART's baud rate
+ @param stopBit UART's stopBit
+ @return HL_OK , HL_INVALID
+*/
 err_t  uart_c::Start(uint32_t baudRate, uint16_t stopBit){
   GPIO_InitTypeDef  GPIO_InitStruct;
   USART_InitTypeDef USART_InitStruct;
@@ -120,11 +120,11 @@ err_t  uart_c::Start(uint32_t baudRate, uint16_t stopBit){
 
 
 /**
-  * @overload
-  * @brief Start serial communicating in default mode with 8 data-bit, 1 stop-bit, no-parity
-  * @param baudRate UART's baud rate
-  * @return HL_OK, HL_INVALID
-  */
+ @overload
+ @brief Start serial communicating in default mode with 8 data-bit, 1 stop-bit, no-parity
+ @param baudRate UART's baud rate
+ @return HL_OK, HL_INVALID
+*/
 err_t  uart_c::Start(uint32_t baudRate){
   return Start(baudRate, USART_StopBits_1);
 }
@@ -132,9 +132,9 @@ err_t  uart_c::Start(uint32_t baudRate){
 
 
 /**
-  * @brief Stop UART clock
-  * @return HL_OK, HL_INVALID
-  */
+ @brief Stop UART clock
+ @return HL_OK, HL_INVALID
+*/
 err_t  uart_c::Shutdown(){
   
   _UART_CONSTRUCT_CHECK();
@@ -153,10 +153,10 @@ err_t  uart_c::Shutdown(){
 
 
 /**
-  * @brief Send one character
-  * @param outChar Character to send
-  * @return HL_OK, HL_NOT_STARTED, HL_INVALID
-  */
+ @brief Send one character
+ @param outChar Character to send
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Print(char outChar){
   _UART_STARTED_CHECK();
   /* Wait until output buffer is empty */ 
@@ -168,11 +168,11 @@ err_t  uart_c::Print(char outChar){
 
 
 /**
-  * @overload
-  * @brief Send one string
-  * @param outStr String to send
-  * @return HL_OK, HL_NOT_STARTED, HL_INVALID
-  */
+ @overload
+ @brief Send one string
+ @param outStr String to send
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Print(char* outStr){
   _UART_STARTED_CHECK();
   while (*outStr != '\0'){
@@ -186,12 +186,12 @@ err_t  uart_c::Print(char* outStr){
 
 
 /**
-  * @overload
-  * @brief Convert one unsigned interger into string and then send it 
-  * @param outNum Unsigned interger number to send
-  * @param radix Valid values are 2, 8, 10, 16
-  * @return HL_OK, HL_NOT_STARTED, HL_INVALID
-  */
+ @overload
+ @brief Convert one unsigned interger into string and then send it 
+ @param outNum Unsigned interger number to send
+ @param radix Valid values are 2, 8, 10, 16
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Print(uint32_t outNum, uint8_t radix){
   char  outStr[33];
 
@@ -206,11 +206,11 @@ err_t  uart_c::Print(uint32_t outNum, uint8_t radix){
 
 
 /**
-  * @overload
-  * @brief Convert one unsigned interger into string and then send it with default radix (decimal)
-  * @param outNum Unsigned interger number to send
-  * @return HL_OK, HL_NOT_STARTED, HL_INVALID
-  */
+ @overload
+ @brief Convert one unsigned interger into string and then send it with default radix (decimal)
+ @param outNum Unsigned interger number to send
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Print(uint32_t outNum){
   return Print(outNum, 10);
 }
@@ -218,10 +218,10 @@ err_t  uart_c::Print(uint32_t outNum){
 
 
 /**
-  * @brief Convert one signed interger into decimal string and then send it
-  * @param outNum Signed interger number to send
-  * @ HL_OK, HL_NOT_STARTED, HL_INVALID
-  */
+ @brief Convert one signed interger into decimal string and then send it
+ @param outNum Signed interger number to send
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Print(int32_t outNum){
   _UART_STARTED_CHECK();
   if (outNum<0){
@@ -236,10 +236,10 @@ err_t  uart_c::Print(int32_t outNum){
 
 
 /**
- * @brief Send one raw 8-bit number 
- * @param outNum 8-bit number to send
- * @return HL_OK, HL_NOT_STARTED, HL_INVALID
- */
+ @brief Send one raw 8-bit number 
+ @param outNum 8-bit number to send
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Out(uint8_t outNum){
   _UART_STARTED_CHECK();
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
@@ -250,11 +250,11 @@ err_t  uart_c::Out(uint8_t outNum){
 
 
 /**
- * @overload
- * @brief Send one raw 16-bit number. The low-order part is sent first.
- * @param outNum 16-bit number to send. 
- * @return HL_OK, HL_NOT_STARTED, HL_INVALID
- */
+ @overload
+ @brief Send one raw 16-bit number. The low-order part is sent first.
+ @param outNum 16-bit number to send. 
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Out(uint16_t outNum){
   _UART_STARTED_CHECK();
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
@@ -267,11 +267,11 @@ err_t  uart_c::Out(uint16_t outNum){
 
 
 /**
- * @overload
- * @brief Send one raw 32-bit number. The low-order part is sent first.
- * @param outNum 32-bit number to send. 
- * @return HL_OK, HL_NOT_STARTED, HL_INVALID
- */
+ @overload
+ @brief Send one raw 32-bit number. The low-order part is sent first.
+ @param outNum 32-bit number to send. 
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Out(uint32_t outNum){
   _UART_STARTED_CHECK();
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
@@ -288,11 +288,11 @@ err_t  uart_c::Out(uint32_t outNum){
 
  
 /**
- * @brief Send one buffer
- * @param outBuf Buffer to send
- * @param bufLen Length in byte of the buffer
- * @return HL_OK, HL_NOT_STARTED, HL_INVALID
- */
+ @brief Send one buffer
+ @param outBuf Buffer to send
+ @param bufLen Length in byte of the buffer
+ @return HL_OK, HL_NOT_STARTED, HL_INVALID
+*/
 err_t  uart_c::Out(uint8_t outBuf[], uint32_t bufLen){
   uint32_t count = 0;
 
@@ -307,19 +307,19 @@ err_t  uart_c::Out(uint8_t outBuf[], uint32_t bufLen){
 
 
 /**
- * @brief Get one received byte in receiving buffer
- * @return Received data 
- */
+ @brief Get one received byte in receiving buffer
+ @return Received data 
+*/
 uint8_t uart_c::Get(void){
   return (uint8_t)(UARTx->DR & (uint16_t)0x00FF);
 }
 
 
 /**
- * @brief Check whether there is a new received byte in receiving buffer
- * @retval TRUE has new data
- * @retval FALSE no new data
- */
+ @brief Check whether there is a new received byte in receiving buffer
+ @retval TRUE has new data
+ @retval FALSE no new data
+*/
 bool uart_c::HasData(void){
   return ( (UARTx->SR & USART_FLAG_RXNE) != 0 );
 }

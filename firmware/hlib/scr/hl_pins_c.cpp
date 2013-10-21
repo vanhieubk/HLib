@@ -1,42 +1,24 @@
 /**
- * @file hl_pins_c.cpp
- * Providing general purpose I/O functions
- *
- * @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- * @version 1.0
- * @date 01-09-2013
- *
- * @copyright
- * This project and all its relevant hardware designs, documents, source codes, compiled libraries
- * belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
- * You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
- * in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
- * SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
- * with respect to any claims arising from the content of hardware, firmware and/or the use 
- * made by customers of the coding information contained herein in connection with their products.\n
- * You are prohibited from commercializing in any kind that using or basing on these works
- * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- * @attention 
- * Current version does not support external trigger interrupt.\n
- * The library does not support remap feature for the STM32F100 STARTER KIT.\n
- * The pins in STM32F100 STARTER KIT are mapped as below\n
- * PIN NUMBER  | BOARD SIGNAL  | 5V TOLERANCE  | SUPPORTED FEATUREs\n
- * 0           | ADC0          |               | ADC1_CH_0/ TIM2_CH_1/ GPIO                 \n
- * 1           | ADC1          |               | ADC1_CH_1/ TIM2_CH_2/ GPIO                 \n         
- * 2           | ADC2          |               | ADC1_CH_2/ TIM2_CH_3/ UART2_TXD/ GPIO      \n
- * 3           | ADC3          |               | ADC1_CH_3/ TIM2_CH_4/ UART2_RXD/ GPIO      \n
- * 4           | NSS/DAC1      |               | DAC_OUT_1/ GPIO                  \n
- * 5           | SCK           |               | SPI1_SCK/ DAC_OUT_2/ GPIO                  \n
- * 6           | MISO          |               | SPI1_MISO/ GPIO                            \n
- * 7           | MOSI          |               | SPI1_MOSI/ GPIO                            \n
- * 8           | SCL           |               | I2C1_SCL/ GPIO                             \n
- * 9           | SDA           |               | I2C1_SDA/ GPIO                             \n
- * 10          | PB8           |               | (TIM16_CH1)/ GPIO                          \n
- * 11          | PB9           |               | (TIM17_CH1)/ GPIO                          \n
- * 12          | PB10          |               | (TIM2_CH3) / GPIO                          \n
- * 13          | PB11          |               | (TIM2_CH4) / GPIO                          \n
- */
+ @file hl_pins_c.cpp
+ @brief Providing general purpose I/O functions
+ @attention 
+ Current version does not support external trigger interrupt.\n
+ The library does not support remap feature for the STM32F100 STARTER KIT.\n
+ @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
+ @version 1.0
+ @date 01-09-2013
 
+ @copyright
+ This project and all its relevant hardware designs, documents, source codes, compiled libraries
+ belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
+ You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
+ in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
+ SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
+ with respect to any claims arising from the content of hardware, firmware and/or the use 
+ made by customers of the coding information contained herein in connection with their products.\n
+ You are prohibited from commercializing in any kind that using or basing on these works
+ without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+*/
 
 #include "hlib.h"
 
@@ -66,9 +48,9 @@
 
 ///////////////////////////////////////////////////
 /**
- * @brief Construction function. Enable GPIO clocks
- * @return None
- */
+ @brief Construction function. Enable GPIO clocks
+ @return None
+*/
 pins_c::pins_c(){
   #ifdef PLATFORM_STM32F100_STARTER
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
@@ -85,10 +67,10 @@ pins_c::pins_c(){
 
 
 /**
-  * @brief Release one pin to input floating state
-  * @param pinIndex Index of the pin
-  * @return None
-  */
+  @brief Release one pin to input floating state
+  @param pinIndex Index of the pin
+  @return None
+*/
 void pins_c::Release(uint8_t pinIndex){
   GPIO_InitTypeDef  GPIO_InitStruct;
   
@@ -104,15 +86,35 @@ void pins_c::Release(uint8_t pinIndex){
 
 
 /**
- * @brief Set operation mode for one pin
- * @param pinIndex Index of the pin
- * @param mode Operation mode. Please refer the table pin map for valid configuration
- * @param type Type of pin
- * @return HL_OK, HL_INVALID
- * @attention Please select type corresponding with selecte mode. If you make a wrong
- * pin configuration, your system may behave in unpredictable manner. Thereforce, we
- * strongly recommend that you check return value of the function and make sure it is HL_OK
- */
+ @brief Set operation mode for one pin\n
+ @details The pins in *STM32F100 STARTER KIT* are mapped as below\n
+ PIN NUMBER | BOARD SIGNAL | 5V TOLERANCE | SUPPORTED MODEs
+ :--------: | :----------- | ------------ | :-----------------
+ 0          | ADC0         |              | ADC1_CH_0/ TIM2_CH_1/ GPIO                
+ 1          | ADC1         |              | ADC1_CH_1/ TIM2_CH_2/ GPIO                         
+ 2          | ADC2         |              | ADC1_CH_2/ TIM2_CH_3/ UART2_TXD/ GPIO     
+ 3          | ADC3         |              | ADC1_CH_3/ TIM2_CH_4/ UART2_RXD/ GPIO     
+ 4          | NSS/DAC1     |              | DAC1_OUT_1/ GPIO                  
+ 5          | SCK          |              | SPI1_SCK/ DAC1_OUT_2/ GPIO                  
+ 6          | MISO         |              | SPI1_MISO/ GPIO                            
+ 7          | MOSI         |              | SPI1_MOSI/ GPIO                            
+ 8          | SCL          |              | I2C1_SCL/ GPIO                             
+ 9          | SDA          |              | I2C1_SDA/ GPIO                             
+ 10         | PB8          |              | (TIM16_CH1)/ GPIO                          
+ 11         | PB9          |              | (TIM17_CH1)/ GPIO                          
+ 12         | PB10         |              | (TIM2_CH3)/ GPIO                          
+ 13         | PB11         |              | (TIM2_CH4)/ GPIO                          
+ @param pinIndex Index of the pin
+ @param mode Operation mode. Please refer the table pin map for valid configuration
+ @param type Type of pin
+ @return HL_OK, HL_INVALID
+ @attention Please select type corresponding with selected mode. If you make a wrong
+ pin configuration, your system may behave in unpredictable manner. Thereforce, we
+ strongly recommend that you check return value of the function and make sure it is HL_OK
+ @warning Due to limitation of STM32F1xx families, pin's mode may be overrided if multi-peripherals
+ which use same pin are enabled. This library cannot handle these situations. You have to
+ ensure that no pin are used by different peripheral at the same time 
+*/
 err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   GPIO_InitTypeDef  GPIO_InitStruct;
   bool combineOk = true;
@@ -205,13 +207,13 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
 
 
 /**
-  * @brief Set output register to a specified value
-  * @param pinIndex Index of the pin
-  * @param val TRUE set one, FALSE set zero
-  * @return None
-  * @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
-  * Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
-  */
+  @brief Set output register to a specified value
+  @param pinIndex Index of the pin
+  @param val TRUE set one, FALSE set zero
+  @return None
+  @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
+  Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
+*/
 void pins_c::SetOutVal(uint8_t pinIndex, bool val){
   if (0 == val){
     GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
@@ -224,24 +226,24 @@ void pins_c::SetOutVal(uint8_t pinIndex, bool val){
 
 
 /**
-  * @brief Set output register to one
-  * @param pinIndex Index of the pin
-  * @return None
-  * @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
-  * Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
-  */
+  @brief Set output register to one
+  @param pinIndex Index of the pin
+  @return None
+  @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
+  Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
+*/
 void pins_c::SetOutOne(uint8_t pinIndex){
   GPIO_SetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }
 
 
 /**
-  * @brief Set output register to zero
-  * @param pinIndex Index of the pin
-  * @return None
-  * @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
-  * Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
-  */
+  @brief Set output register to zero
+  @param pinIndex Index of the pin
+  @return None
+  @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
+  Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
+*/
 void pins_c::SetOutZero(uint8_t pinIndex){
   GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }
@@ -249,11 +251,11 @@ void pins_c::SetOutZero(uint8_t pinIndex){
 
 
 /**
-  * @brief Get digital electronic value at one pin
-  * @param pinIndex Index of the pin
-  * @retval true pin is 1
-  * @retval false pin is 0
-  */
+  @brief Get digital electronic value at one pin
+  @param pinIndex Index of the pin
+  @retval true pin is 1
+  @retval false pin is 0
+*/
 bool pins_c::GetInput(uint8_t pinIndex){
   return GPIO_ReadInputDataBit(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }

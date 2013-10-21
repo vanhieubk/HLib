@@ -48,10 +48,10 @@
 
 ////////////////////////////////////////////////////////////
 /**
-  * @brief Construction function
-  * @param spiNum SPI/I2S will be used.   
-  * @return None
-  */
+ @brief Construction function
+ @param spiNum SPI/I2S will be used.   
+ @return None
+*/
 spi_i2s_c::spi_i2s_c(uint8_t spiNum){
   switch (spiNum){
     #if defined(STM32F100C8_MCU)
@@ -71,18 +71,18 @@ spi_i2s_c::spi_i2s_c(uint8_t spiNum){
 
 
  /**
-  * @brief Start SPI peripheral.
-  * @param prescaler Baudrate prescaler of SPI.
-  * @param highLevelIdle TRUE : data line is kept at high level in idle state. \nFALSE : data line is kept at low level in idle state.
-  * @param secondEdge TRUE: data is latched at the second edge. \nFALSE: data is latched at the first edge
-  * @param firstBitMSB TRUE: first bit is the MSB.\nFALSE: first bit is the LSB
-  * @param direction Communication direction of the SPI
-  * @param crcEnable TRUE: hardware CRC calculator is used. \nFALSE: hardware CRC calculator is not used
-  * @param crcPoly: CRC polynomial 
-  * @retval HL_INVALID one or some parameters is invalid. The method is cancel
-  * @retval HL_OK The method is performed OK
-  */
-err_t spi_i2s_c::Start(spi_prescaler_t prescaler, bool highLevelIdle, bool secondEdge, bool firstBitMSB, spi_direction_t direction, bool crcEnable, uint16_t crcPoly){
+ @brief Start SPI peripheral.
+ @param prescaler Baudrate prescaler of SPI.
+ @param idleLevel TRUE : data line is kept at high level in idle state. \nFALSE : data line is kept at low level in idle state.
+ @param secondEdge TRUE: data is latched at the second edge. \nFALSE: data is latched at the first edge
+ @param firstBitMSB TRUE: first bit is the MSB.\nFALSE: first bit is the LSB
+ @param direction Communication direction of the SPI
+ @param crcEnable TRUE: hardware CRC calculator is used. \nFALSE: hardware CRC calculator is not used
+ @param crcPoly: CRC polynomial 
+ @retval HL_INVALID one or some parameters is invalid. The method is cancel
+ @retval HL_OK The method is performed OK
+*/
+err_t spi_i2s_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge, bool firstBitMSB, spi_direction_t direction, bool crcEnable, uint16_t crcPoly){
   SPI_InitTypeDef   SPI_InitStruct;
   
   _SPI_CONSTRUCT_CHECK();
@@ -95,7 +95,7 @@ err_t spi_i2s_c::Start(spi_prescaler_t prescaler, bool highLevelIdle, bool secon
   }
   
   /*config SPI/I2S */
-  SPI_InitStruct.SPI_CPOL              = highLevelIdle ? SPI_CPOL_High    : SPI_CPOL_Low;
+  SPI_InitStruct.SPI_CPOL              = idleLevel ? SPI_CPOL_High    : SPI_CPOL_Low;
   SPI_InitStruct.SPI_CPHA              = secondEdge    ? SPI_CPHA_2Edge   : SPI_CPHA_1Edge;
   SPI_InitStruct.SPI_FirstBit          = firstBitMSB   ? SPI_FirstBit_MSB : SPI_FirstBit_LSB; 
   SPI_InitStruct.SPI_CPHA              = SPI_CPHA_2Edge;
@@ -125,25 +125,25 @@ err_t spi_i2s_c::Start(spi_prescaler_t prescaler, bool highLevelIdle, bool secon
 
 
 /**
-  * @overload
-  * @brief Start SPI peripheral. Operating mode is: firstBitMSB, SPI_2LINES_RX_TX, CRC disable
-  * @param prescaler Baudrate prescaler of SPI.
-  * @param highLevelIdle TRUE : data line is kept at high level in idle state. \nFALSE : data line is kept at low level in idle state.
-  * @param secondEdge TRUE: data is latched at the second edge. \nFALSE: data is latched at the first edge
-  * @param firstBitMSB TRUE: first bit is the MSB.\nFALSE: first bit is the LSB
-  * @retval HL_INVALID one or some parameters is invalid. The method is cancel
-  * @retval HL_OK The method is performed OK
- */
-err_t  spi_i2s_c::Start(spi_prescaler_t prescaler, bool highLevelIdle, bool secondEdge){
-  return Start(prescaler, highLevelIdle, secondEdge, true, SPI_2LINES_RX_TX, false, GetCRCPoly());
+ @overload
+ @brief Start SPI peripheral. Operating mode is: firstBitMSB, SPI_2LINES_RX_TX, CRC disable
+ @param prescaler Baudrate prescaler of SPI.
+ @param idleLevel TRUE : data line is kept at high level in idle state. \nFALSE : data line is kept at low level in idle state.
+ @param secondEdge TRUE: data is latched at the second edge. \nFALSE: data is latched at the first edge
+ @param firstBitMSB TRUE: first bit is the MSB.\nFALSE: first bit is the LSB
+ @retval HL_INVALID one or some parameters is invalid. The method is cancel
+ @retval HL_OK The method is performed OK
+*/
+err_t  spi_i2s_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge){
+  return Start(prescaler, idleLevel, secondEdge, true, SPI_2LINES_RX_TX, false, GetCRCPoly());
 }
 
 
 
 /**
-  * @brief Stop SPI/I2S and then disable its clock
-  * @return None
-  */
+ @brief Stop SPI/I2S and then disable its clock
+ @return None
+*/
 void spi_i2s_c::Shutdown(){
   SPIx->CR1 &= CR1_SPE_Reset;
   switch (spiNum){
@@ -156,10 +156,10 @@ void spi_i2s_c::Shutdown(){
 
 
 /**
-  * @brief Wait until the output buffer empty and then send one byte
-  * @param sendData Data to send
-  * @return None
-  */
+ @brief Wait until the output buffer empty and then send one byte
+ @param sendData Data to send
+ @return None
+*/
 void spi_i2s_c::Send(uint8_t sendData){ 
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait, DO NOTHING */
@@ -170,13 +170,13 @@ void spi_i2s_c::Send(uint8_t sendData){
 
 
 /**
-  * @overload
-  * @brief Send one byte. Wait until data transmision completed and then get receiving data
-  * @param sendData Data to send
-  * @param recvData Pointer to variable will hold receiving data
-  * @return None
-  */
-void spi_i2s_c::Send(uint8_t sendData, uint8_t *recvData){ 
+ @overload
+ @brief Send one byte. Wait until data transmision completed and then get receiving data
+ @param sendData Data to send
+ @param recvData Pointer to variable will hold receiving data
+ @return None
+*/
+void spi_i2s_c::SendRecv(uint8_t sendData, uint8_t *recvData){ 
   Send(sendData);
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait data to send, DO NOTHING */
@@ -190,12 +190,12 @@ void spi_i2s_c::Send(uint8_t sendData, uint8_t *recvData){
 
 
 /**
-  * @overload 
-  * @brief Send an array of data
-  * @param sendBuf Array of data to send
-  * @param bufLen Length of array of data
-  * @return None
-  */
+ @overload 
+ @brief Send an array of data
+ @param sendBuf Array of data to send
+ @param bufLen Length of array of data
+ @return None
+*/
 void spi_i2s_c::Send(uint8_t sendBuf[], uint16_t bufLen){
   uint16_t index;
   for (index=0; index<bufLen; index++){
@@ -206,14 +206,14 @@ void spi_i2s_c::Send(uint8_t sendBuf[], uint16_t bufLen){
 
 
 /**
-  * @overload
-  * @brief Send and receive arrays of data
-  * @param sendBuf Array of data to send
-  * @param recvBuf Pointer to array of data will hold receiving data
-  * @param bufLen Length of send/receive array of data
-  * @return None
-  */
-void spi_i2s_c::Send(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen){
+ @overload
+ @brief Send and receive arrays of data
+ @param sendBuf Array of data to send
+ @param recvBuf Pointer to array of data will hold receiving data
+ @param bufLen Length of send/receive array of data
+ @return None
+*/
+void spi_i2s_c::SendRecv(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen){
   uint16_t index;
 
   if (bufLen == 0) return;
@@ -247,9 +247,9 @@ void spi_i2s_c::Send(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen){
 
 
 /**
-  * @brief Get current CRC polynomial
-  * @return Current CRC polynomial
-  */
+ @brief Get current CRC polynomial
+ @return Current CRC polynomial
+*/
 uint16_t spi_i2s_c::GetCRCPoly(){ 
   return SPIx->CRCPR;
 }
@@ -257,9 +257,9 @@ uint16_t spi_i2s_c::GetCRCPoly(){
 
 
 /**
-  * @brief Request sending hardware calculated CRC after current transmission completed
-  * @return None
-  */
+ @brief Request sending hardware calculated CRC after current transmission completed
+ @return None
+*/
 void spi_i2s_c::SendCRC(){ 
   SPIx->CR1 |= CR1_CRCNext_Set;
 }      
@@ -267,9 +267,9 @@ void spi_i2s_c::SendCRC(){
 
 
 /**
-  * @brief Get sending CRC value if CRC feature is enabled
-  * @return Sending CRC
-  */
+ @brief Get sending CRC value if CRC feature is enabled
+ @return Sending CRC
+*/
 uint16_t spi_i2s_c::GetSendCRC(){
   return SPIx->TXCRCR;
 }
@@ -277,9 +277,9 @@ uint16_t spi_i2s_c::GetSendCRC(){
 
 
 /**
-  * @brief Get receiving CRC value if CRC feature is enabled
-  * @return Receiving CRC
-  */
+ @brief Get receiving CRC value if CRC feature is enabled
+ @return Receiving CRC
+*/
 uint16_t spi_i2s_c::GetRecvCRC(){
   return SPIx->RXCRCR;
 }
@@ -287,10 +287,10 @@ uint16_t spi_i2s_c::GetRecvCRC(){
 
 
 /**
-  * @brief Clear calculated CRC to prepare for new transmision
-  * @return None
-  * @caution Only use when SPI is not busy or data corruption may happen
-  */
+ @brief Clear calculated CRC to prepare for new transmision
+ @return None
+ @caution Only use when SPI is not busy or data corruption may happen
+*/
 void spi_i2s_c::ClearCRC(){
   SPIx->CR1 &= CR1_SPE_Reset;   //Disable SPI
   SPIx->CR1 &= CR1_CRCEN_Reset; //Disable CRC
@@ -301,10 +301,10 @@ void spi_i2s_c::ClearCRC(){
 
 
 /**
-  * @brief Check SPI busy status
-  * @return TRUE: SPI is busy. FALSE: SPI is not busy
-  */
-bool spi_i2s_c::IsBusy{
+ @brief Check SPI busy status
+ @return TRUE: SPI is busy. FALSE: SPI is not busy
+*/
+bool spi_i2s_c::IsBusy(){
   return (SPIx->SR & SPI_I2S_FLAG_BSY);
 } 
 

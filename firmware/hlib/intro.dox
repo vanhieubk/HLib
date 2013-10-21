@@ -1,32 +1,35 @@
 /**
  * @mainpage
- * The aim of HLib project is to build up an eco-system for applying embedded system into real world. The eco-system includes an open hardware library,
- * an open software library, and a community of engineers, researchers, and students.
- *
- * The most important point that makes this project differ others is standardization. The project standardizes connector interface, connector layout, 
- * and board mechanical specification. All hardware designs have to comply with these specifications in order to form a compatible hardware library. 
- * In addition, a standardized software library are developed concurrently. This ensures every board can plug and play. Consequently, users using HLib 
- * only think about their applications and add-in value. They do not need concert with hardware design, hardware compatible, hardware abstract layer
- * any more. Is it amazing idea of HLib.
- *
- * The hardware library includes some mother boards (MBoard) and vast of extension boards (divided into stackable board - SBoard, and end board - EBoard).
- * MBoard is main board with primary micro-controller or micro-processor. It connects all boards together and takes responsibility as master controller 
- * of the whole system. MBoards are pre-developed by a core developer team. SBoard and EBoard provides extension, specific functions such as wireless 
- * communication, motor control, high precision analog-to-digital converter, etc. SBoard can stack multi-layer while EBoard cannot. SBoard and EBoard are
- * developed and integrated into the HLib by developer community or anyone who want to contribute.
- *
- * In first phase, main purpose of the project is to support developing of embedded system in Department of Computer Engineering, Ho Chi Minh City
- * University of Technology (DCE-HCMUT). Basis MBoards, EBoards and their software libraries are designed by lecturers and students of DCE-HCMUT. 
- * These boards are used in students' projects, thesis, and researches freely in laboratory. DCE will corporate with companies to make special discount
- * program so that student can own these boards. They can also make these board by themselves with open hardware provided. Lecturers may use these boards
- * for fast prototype in their projects also.
- * 
- * The project is open. All the hardwares and softwares of HLib are open access at https://github.com/vanhieubk/HLib. Using, developing,  commercializing,
- * or getting profit form HLib must complying with <b> NonCommercial-ShareAlike Common Creative License </b>
- *
- * If you want to join, please contact us:\n
- * Bui Van Hieu\n
- * Email: bvhieu@cse.hcmut.edu.vn\n
- * Block A3, Ho Chi Minh City University of Technology\n
- * 268 Ly Thuong Kiet Street, District 10, Ho Chi Minh City
+# Introduction
+
+The aim of HLib project is to build up an eco-system for applying embedded system into real world. The eco-system includes an open hardware library,
+an open software library, and a community of engineers, researchers, and students.
+
+The most important point that makes this project differ others is standardization. The project standardizes connector interface, connector layout, 
+and board mechanical specification. All hardware designs have to comply with these specifications in order to form a compatible hardware library. 
+In addition, a standardized software library are developed concurrently. This ensures every board can plug and play. Consequently, users using HLib 
+only think about their applications and add-in value. They do not need concert with hardware design, hardware compatible, hardware abstract layer
+any more. Is it amazing idea of HLib.
+
+The hardware library includes some mother boards (MBoard) and vast of extension boards (divided into stackable board - SBoard, and end board - EBoard).
+MBoard is main board with primary micro-controller or micro-processor. It connects all boards together and takes responsibility as master controller 
+of the whole system. MBoards are pre-developed by a core developer team. SBoard and EBoard provides extension, specific functions such as wireless 
+communication, motor control, high precision analog-to-digital converter, etc. SBoard can stack multi-layer while EBoard cannot. SBoard and EBoard are
+developed and integrated into the HLib by developer community or anyone who want to contribute.
+
+In first phase, main purpose of the project is to support developing of embedded system in Department of Computer Engineering, Ho Chi Minh City
+University of Technology (DCE-HCMUT). Basis MBoards, EBoards and their software libraries are designed by lecturers and students of DCE-HCMUT. 
+These boards are used in students' projects, thesis, and researches freely in laboratory. DCE will corporate with companies to make special discount
+program so that student can own these boards. They can also make these board by themselves with open hardware provided. Lecturers may use these boards
+for fast prototype in their projects also.
+
+The project is open. All the hardwares and softwares of HLib are open access at https://github.com/vanhieubk/HLib. Using, developing,  commercializing,
+or getting profit form HLib must complying with **NonCommercial-ShareAlike Common Creative License** 
+
+If you want to join, please contact us:\n
+Bui Van Hieu\n
+Email: <mailto:bvhieu@cse.hcmut.edu.vn>\n
+Block A3, Ho Chi Minh City University of Technology\n
+268 Ly Thuong Kiet Street, District 10, Ho Chi Minh City
+
  */
