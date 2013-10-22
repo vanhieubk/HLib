@@ -42,7 +42,7 @@
 #include "hl_util.h"
 #include "hl_uart_c.h"
 #include "hl_spi_i2s_c.h"
-//#include "hl_adc_c.h"
+#include "hl_adc_c.h"
 #include "hl_pins_c.h"
 #include "hl_leds_c.h"
 

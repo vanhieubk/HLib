@@ -1,34 +1,34 @@
 //Not support dual/tripble mode
 typedef void (*ISR_ADCCallback)(uint16_t); 
 typedef enum {
-  AlterTrig               = (uint32_t)0x00090000, 
-  FastInterl              = (uint32_t)0x00070000,
-  Independent             = (uint32_t)0x00000000,
-  InjecSimult             = (uint32_t)0x00050000,
-  InjecSimult_FastInterl  = (uint32_t)0x00030000,
-  InjecSimult_SlowInterl  = (uint32_t)0x00040000,
-  RegInjecSimult          = (uint32_t)0x00010000,
-  RegSimult               = (uint32_t)0x00060000,
-  RegSimult_AlterTrig     = (uint32_t)0x00020000,
-  SlowInterl              = (uint32_t)0x00080000
+  ADC_ALTER_TRIG               = (uint32_t)0x00090000, 
+  ADC_FAST_INTER1              = (uint32_t)0x00070000,
+  ADC_INDEPENDENT             = (uint32_t)0x00000000,
+  ADC_INJECT_SIMULT             = (uint32_t)0x00050000,
+  ADC_INJECT_SIMULT_FASTINTER1  = (uint32_t)0x00030000,
+  ADC_INJEC_SIMULT_SLOWINTER1  = (uint32_t)0x00040000,
+  ADC_REG_INJECT_SIMULT         = (uint32_t)0x00010000,
+  ADC_REG_SIMULT               = (uint32_t)0x00060000,
+  ADC_REG_SIMULT_ALTER_TRIG    = (uint32_t)0x00020000,
+  ADC_SLOW_INTER1              = (uint32_t)0x00080000
   } adc_mode_t;	
 
 typedef enum{
- #define  ADC_ExternalTrigConv_Ext_IT11_TIM8_TRGO   ((uint32_t)0x000C0000) 
-#define  ADC_ExternalTrigConv_None   ((uint32_t)0x000E0000) 
-#define  ADC_ExternalTrigConv_T1_CC1   ((uint32_t)0x00000000) 
-#define  ADC_ExternalTrigConv_T1_CC2   ((uint32_t)0x00020000) 
-#define  ADC_ExternalTrigConv_T1_CC3   ((uint32_t)0x00040000) 
-#define  ADC_ExternalTrigConv_T2_CC2   ((uint32_t)0x00060000) 
-#define  ADC_ExternalTrigConv_T2_CC3   ((uint32_t)0x00020000) 
-#define  ADC_ExternalTrigConv_T3_CC1   ((uint32_t)0x00000000) 
-#define  ADC_ExternalTrigConv_T3_TRGO   ((uint32_t)0x00080000) 
-#define  ADC_ExternalTrigConv_T4_CC4   ((uint32_t)0x000A0000) 
-#define  ADC_ExternalTrigConv_T5_CC1   ((uint32_t)0x000A0000) 
-#define  ADC_ExternalTrigConv_T5_CC3   ((uint32_t)0x000C0000) 
-#define  ADC_ExternalTrigConv_T8_CC1   ((uint32_t)0x00060000) 
-#define  ADC_ExternalTrigConv_T8_TRGO   ((uint32_t)0x00080000) 
-
+   ADC_TRIG_SOURCE_Ext_IT11_TIM8_TRGO =  ((uint32_t)0x000C0000), 
+ADC_TRIG_SOURCE_None  = ((uint32_t)0x000E0000) ,
+ADC_TRIG_SOURCE_T1_CC1 =  ((uint32_t)0x00000000), 
+ADC_TRIG_SOURCE_T1_CC2 =  ((uint32_t)0x00020000) ,
+ADC_TRIG_SOURCE_T1_CC3 =  ((uint32_t)0x00040000) ,
+ADC_TRIG_SOURCE_T2_CC2 =  ((uint32_t)0x00060000) ,
+ADC_TRIG_SOURCE_T2_CC3 =  ((uint32_t)0x00020000) ,
+ADC_TRIG_SOURCE_T3_CC1 =  ((uint32_t)0x00000000) ,
+ADC_TRIG_SOURCE_T3_TRGO =  ((uint32_t)0x00080000) ,
+ADC_TRIG_SOURCE_T4_CC4  = ((uint32_t)0x000A0000) ,
+ADC_TRIG_SOURCE_T5_CC1  = ((uint32_t)0x000A0000) ,
+ADC_TRIG_SOURCE_T5_CC3  = ((uint32_t)0x000C0000) ,
+ADC_TRIG_SOURCE_T8_CC1  = ((uint32_t)0x00060000) ,
+ADC_TRIG_SOURCE_T8_TRGO  = ((uint32_t)0x00080000) 
+} adc_trig_source_t;
 
 class adc_c{
 private:
