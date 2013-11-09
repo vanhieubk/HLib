@@ -1,6 +1,6 @@
 /**
  @file hl_uart_c.cpp
- Implementing serial communication methods for USARTs in <b> HLib's MBoards  </b>
+ @brief Implementing serial communication methods for USARTs in <b> HLib's MBoards  </b>
 
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0
@@ -16,12 +16,14 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+ 
+ @class uart_c
+ @brief Providing controlling method for USART peripheral of STM32
  @attention
- This library always enables receiving feature.\n
- Current version only supports polling receiving, only support USART1 and USART2\n.
- Interrupt receiving will be implemented in next version/n
- The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1\n
- This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
+ - The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1
+ - This library always enables receiving feature.
+ - Current version only supports polling receiving. Interrupt receiving will be implemented in next version
+ - This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
 */
 
 

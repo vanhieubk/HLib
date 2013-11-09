@@ -1,11 +1,11 @@
 /**
  @file hl_leds_c.cpp
- Providing single-color LEDs control utilities for MBoards
- *
+ @brief Providing single-color LEDs control utilities for MBoards
+ 
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0
  @date 04-09-2013
- *
+ 
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
  belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
@@ -16,10 +16,12 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+ 
+ @class leds_c
+ @brief Providing controlling function for LEDs of a platform
  @attention
- There should be only one instance of this class to avoid confliction. The instance
- was initialized by HLib libraray. Thereforce, please do not create an instance of
- this class.
+ - HLib firmware has reserved one instance of this class as LEDs. 
+ To avoid confliction, please do not create an instance of this class.
 */
 
 #include "hlib.h"

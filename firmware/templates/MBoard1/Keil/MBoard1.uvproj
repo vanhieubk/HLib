@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>Target 1</TargetName>
+      <TargetName>MBoard1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -571,7 +571,14 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>user_lib</GroupName>
+          <GroupName>user_libs</GroupName>
+          <Files>
+            <File>
+              <FileName>tmp121_c.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\user_libs\src\tmp121_c.cpp</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>app</GroupName>

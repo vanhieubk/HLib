@@ -1,6 +1,6 @@
 /**
  @file hl_util.cpp
- Providing utilities to make program easier
+ @brief Providing utilities to make programming easier
 
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0

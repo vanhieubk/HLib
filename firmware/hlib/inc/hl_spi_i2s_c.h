@@ -41,7 +41,10 @@ typedef enum{
   SPI_2LINES_RX_TX   = ((uint16_t)0x0000)  /**< SPI works in full-duplex mode with both receiving and transmitting are enabled */
 } spi_direction_t; 
 
-
+/**
+ @class spi_i2s_c
+ @brief Test brief for class
+*/
 class spi_i2s_c {
 private:
   uint8_t    spiNum;

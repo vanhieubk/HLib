@@ -19,10 +19,19 @@
 
 #include "hlib.h"
 uint32_t counter;
+const char* str = "df ja fljasdfja sfjawoef jdsafjdalsfj aslkdfjasdl kfjadslk fas sdafa faef dsafa faf dafa fa";
+const char  text[1024] = "df as jl fdg sgsfdg hrtg s fgsdg trsef dfghes fsdfgtyte tsgtr hrue6tw regrt he56h gsdfg dghry ey erhtr s gdghsd gdgh thsre sfd bhjuyier dhgfj dsg gfwea joiea ";
 //////////////////////////////////////////////
+void xyz(){
+}
+
+int xyz(){
+}
+
 void Setup(void){
   counter = 0;
   /* ADD CODE HERE TO INITIALIZE YOUR PROGRAM */
+  xyz();
 }
 
 
@@ -37,6 +46,7 @@ void Loop(void){
     LEDS.Toggle(0);
     LEDS.Toggle(1);
     COM1.Print("Bui Van Hieu\n");
+    COM1.Print((char*) text);
   }
   /* ADD CODE HERE TO IMPLEMENT YOUR INFINITIVE LOOP  */
 

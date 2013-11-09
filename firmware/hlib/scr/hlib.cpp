@@ -1,11 +1,11 @@
 /**
  @file hlib.cpp
- Implementing HLib initialize, looping framework
- *
+ @brief Implementing HLib initialize, looping framework
+ 
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0
  @date 01-09-2013
- *
+ 
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
  belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
@@ -56,10 +56,12 @@ int main(void){
  @return None
 */  
 void HLib_Init(void){
-  COM1.Start(9600);
+  COM1.Start(115200);
   COM1.Print("WELCOME TO HLib\n");
   #ifdef PLATFORM_STM32F100_STARTER
+    LEDS.On(0);
+    LEDS.On(1);
     LCD.Start();
-	LCD.Print("WELCOME TO HLib");
+  	LCD.Print("WELCOME TO HLib");
   #endif
 }

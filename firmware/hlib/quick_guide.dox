@@ -1,0 +1,14 @@
+/**
+
+ @page qGuide Quick user guide
+ # Configure your platform
+ HLib library is written for vary platforms. So, you have to configure your platform in **hl_config.h** by uncommenting corresponding 
+ platform and commenting others. Below code is an example.
+ @code {.h}
+ /* SELECT YOUR PLATFORM BY UNCOMMENTING IT */
+ #define PLATFORM_STM32F100_STARTER
+ //#define PLATFORM_MBOARD_ONE
+ @endcode
+
+
+ */

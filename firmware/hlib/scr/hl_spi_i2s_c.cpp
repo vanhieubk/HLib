@@ -1,29 +1,31 @@
 /**
- * @file hl_spi_i2s_c.cpp
- * Implementing basis communication methods for SPI/I2S in <b> HLib's MBoards  </b>
- *
- * @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- * @version 1.0
- * @date 05-10-2013
- *
- * @copyright
- * This project and all its relevant hardware designs, documents, source codes, compiled libraries
- * belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
- * You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
- * in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
- * SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
- * with respect to any claims arising from the content of hardware, firmware and/or the use 
- * made by customers of the coding information contained herein in connection with their products.\n
- * You are prohibited from commercializing in any kind that using or basing on these works
- * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- * @attention
- * I2S has not supported yet\n
- * DMA has not supported yet\n
- * Interrupt has not supported yet\n
- * Only master SPI \n
- * Only support 8-bit data frame mode \n
- * Only send/receive one word supported. If you need send/receive a long buffer, please derive a new class
- */
+ @file hl_spi_i2s_c.cpp
+ @brief Implementing basis communication methods for SPI/I2S in <b> HLib's MBoards  </b>
+ 
+ @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
+ @version 1.0
+ @date 05-10-2013
+ 
+ @copyright
+ This project and all its relevant hardware designs, documents, source codes, compiled libraries
+ belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
+ You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
+ in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
+ SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
+ with respect to any claims arising from the content of hardware, firmware and/or the use 
+ made by customers of the coding information contained herein in connection with their products.\n
+ You are prohibited from commercializing in any kind that using or basing on these works
+ without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+ 
+ @class spi_i2s_c
+ @brief Providing controlling method for SPI/I2S peripheral of a STM32
+ @attention
+ - Only master SPI mode is supported. No slave mode.
+ - Only 8-bit data frame mode is supported. No 16-bit data frame mode.
+ - I2S has not supported yet
+ - DMA has not supported yet
+ - Interrupt has not supported yet
+*/
 
 
 
@@ -107,7 +109,7 @@ err_t spi_i2s_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdg
   SPI_InitStruct.SPI_BaudRatePrescaler = prescaler; 
  
   if (0 != spiNum){
-    SPIx->CR1 &= CR1_SPE_Reset;  
+    SPIx->CR1 &= CR1_SPE_Reset; /* stop/disable */  
     SPI_Init(SPIx, &SPI_InitStruct);
     if (crcEnable){
       SPIx->CR1 |= CR1_CRCEN_Set;

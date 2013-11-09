@@ -1,9 +1,7 @@
 /**
  @file hl_pins_c.cpp
- @brief Providing general purpose I/O functions
- @attention 
- Current version does not support external trigger interrupt.\n
- The library does not support remap feature for the STM32F100 STARTER KIT.\n
+ @brief Implementing I/O controlling methods
+
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0
  @date 01-09-2013
@@ -18,8 +16,16 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
-*/
 
+ @class pins_c 
+ @brief Providing I/O functions for all the PINs in an platform
+ @attention 
+ - HLib library has already defined global instance PINs for this class. You should use
+ this instance to control I/O function. You do not create another instance of this class
+ or abnormal operating may happen.
+ - Current version does not support external trigger interrupt.
+ - The library does not support remap feature for the STM32F100 STARTER KIT.
+*/
 #include "hlib.h"
 
 ///////////////////////////////////////////////////
@@ -131,8 +137,8 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
         case 1: if ((ADC1_CH_1 == mode) || (TIM2_CH_2 == mode)) {assignOk = true;} break;
         case 2: if ((ADC1_CH_2 == mode) || (TIM2_CH_3 == mode) || (UART2_TXD == mode)) {assignOk = true;} break;
         case 3: if ((ADC1_CH_3 == mode) || (TIM2_CH_4 == mode) || (UART2_RXD == mode)) {assignOk = true;} break;
-        case 4: if ( DAC_OUT_1 == mode) {assignOk = true;} break;
-        case 5: if ((SPI1_SCK  == mode) || (DAC_OUT_2 == mode)) {assignOk = true;} break;
+        case 4: if ( DAC1_OUT_1 == mode) {assignOk = true;} break;
+        case 5: if ((SPI1_SCK  == mode) || (DAC1_OUT_2 == mode)) {assignOk = true;} break;
         case 6: if ( SPI1_MISO == mode) {assignOk = true;}  break;
         case 7: if ( SPI1_MOSI == mode) {assignOk = true;}  break;
         case 8: if ( I2C1_SCL  == mode) {assignOk = true;}  break;
@@ -151,7 +157,7 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
         combineOk = false;;
       }
     }
-    else if ((DAC_OUT_1 == mode) ||(DAC_OUT_2 == mode)){
+    else if ((DAC1_OUT_1 == mode) ||(DAC1_OUT_2 == mode)){
       if (ANALOG_OUTPUT != type){
         combineOk = false;;
       }
