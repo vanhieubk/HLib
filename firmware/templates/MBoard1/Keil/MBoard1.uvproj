@@ -48,7 +48,7 @@
           <OutputName>MBoard1</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\</ListingPath>
@@ -141,7 +141,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
+          <TargetSelection>0</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -577,6 +577,11 @@
               <FileName>tmp121_c.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\user_libs\src\tmp121_c.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>tlc5971_c.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\user_libs\src\tlc5971_c.cpp</FilePath>
             </File>
           </Files>
         </Group>
