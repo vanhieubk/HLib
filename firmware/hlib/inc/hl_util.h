@@ -19,6 +19,19 @@
 #ifndef __HL_UTIL_H
 #define __HL_UTIL_H
 
+/** \addtogroup HLibGlobalMac HLib's global macros
+ @{
+*/
+
+//  DEFINE  ///////////////////////////
+#define HL_BitMask(pos) 				(1 <<(pos)) /**< Generate one-bit mask */
+#define HL_BitSet(var, pos) 		((var) |= BIT_Mask(pos)) /**< Set one bit at specified position*/
+#define HL_BitClear(var, pos) 	((var) &= ~BIT_Mask(pos)) /**< Clear one bit a specified position */
+
+/** @} */
+
 void HL_LoopDelay(uint32_t numLoop);
 void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]);
+
+
 #endif

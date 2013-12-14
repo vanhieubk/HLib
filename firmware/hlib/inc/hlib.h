@@ -23,11 +23,14 @@
 
 #include "hl_conf.h"
 
+/** \addtogroup HLibGlobalMac HLib's global macros 
+ @{
+*/
+
 #ifdef PLATFORM_STM32F100_STARTER
   ////  CONFIGURATION of STM32F100 STARTER KIT  ////
   #include "stm32f10x_conf.h"
-  #include "hl_hd44780_c.h"
-  extern hd44780_c  LCD;
+  #include "hl_hd44780.h"
 #elif defined (PLATFORM_MBOARD_ONE)
   ////  CONFIGURATION of MBoard1 KIT  ////
   #include "stm32f10x_conf.h"
@@ -35,26 +38,33 @@
   #error "You have selected unsupported platform"
 #endif /* #ifdef PLATFORM_... */
 
-
+/** @} */
 
 ////  INCLUDE HLib //////////////////
 #include "hl_def.h"
 #include "hl_util.h"
-#include "hl_uart_c.h"
-#include "hl_spi_i2s_c.h"
-#include "hl_adc_c.h"
-#include "hl_pins_c.h"
-#include "hl_leds_c.h"
+#include "hl_pin.h"
+#include "hl_led.h"
+#include "hl_uart.h"
+#include "hl_spi_base.h"
+#include "hl_adc.h"
+#include "hl_crc.h"
 
-
+/** \addtogroup HLibGlobalVar HLib's global variables
+ @{
+*/
 //  GLOBAL VARIABLES  ///////////////
-extern volatile uint8_t optFreeVar; /* implement NOP instruction in C/C++ */
-
+extern volatile uint8_t optFreeVar; /**< Univeral variable for implementing small delay in C/C++ */
 
 //  GLOBAL OBJECTS  ///////////////
-extern uart_c     COM1;
-extern leds_c     LEDS;
-extern pins_c     PINS;
+extern uart_c     COM1; /**< COM1/USART1 of a platform */
+#ifdef PLATFORM_STM32F100_STARTER
+  extern hd44780_c  LCD; /**< HD44780 LCD controller. Only available for STM32F100 STARTER */
+#endif
+/** @} */
+
 // HLIB FUNCTIONS  ///////////////
-void HLib_Init();
+void   HLib_Start();
+
 #endif /* __HLIB_H */
+

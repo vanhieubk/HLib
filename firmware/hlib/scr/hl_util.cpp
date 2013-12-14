@@ -23,11 +23,16 @@
 volatile  uint32_t loopDelayCounter;
 
 ///////////////////////////////////////////////
+/** \addtogroup HLibGlobalFunc HLib's global functions 
+ @{
+*/
+
+
 /**
  @brief Peforming delay by a finitive loop
  @param numLoop Delay time
  @return None
- @attention Real delay time depend on speed of used MCU.
+ @attention Real delay time depends on speed of used MCU.
 */
 void HL_LoopDelay(uint32_t numLoop){
   for (loopDelayCounter=0; loopDelayCounter<numLoop; loopDelayCounter++){
@@ -39,8 +44,8 @@ void HL_LoopDelay(uint32_t numLoop){
 /**
  @brief Convert an unsigned interger to string 
  @param num Converted number
- @radix Only support 2, 8, 10, 16
- @outStr Converting result
+ @param radix Only support 2, 8, 10, 16
+ @param outStr Converting result
  @return None
 */
 void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]){
@@ -65,3 +70,5 @@ void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]){
   }
   outStr[index] = '\0';
 }
+
+/** @} */

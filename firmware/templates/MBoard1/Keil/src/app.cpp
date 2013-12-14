@@ -20,8 +20,24 @@
 #include "hlib.h"
 #include "tlc5971_c.h"
 
+
+#include "CoOS.h"
+
+
+#define COS_DEFAULT_QUEUE_SIZE 	16
+#define COS_DEFAULT_TASK_STACK  128
+// Globol variables  ////
+void*       sendQueue[COS_DEFAULT_QUEUE_SIZE];
+volatile 	OS_EventID  sendQueueId;
+volatile 	OS_TCID     periodicTimerId;
+							OS_STK      TSK_MainStk[COS_DEFAULT_TASK_STACK];  
+
+// CooCox RTOS task implementation  ////
+void TSK_Main (void* pdata);
+void TSK_Main (void* pdata){
+}
 uint32_t counter;
-spi_i2s_c spi1(1);
+spi_base_c spi1(1);
 tlc5971_c TLC5971(&spi1);
 
 void Setup(void){
@@ -43,6 +59,12 @@ void Setup(void){
   HL_LoopDelay(1000000);
   TLC5971.Send();
   HL_LoopDelay(1000000);
+	
+	//CoInitOS();                
+  /* Create task */ 
+  //CoCreateTask(TSK_Main, 0, 0, &TSK_MainStk[COS_DEFAULT_TASK_STACK-1], COS_DEFAULT_TASK_STACK); 
+  /* Start multitask scheduling*/     
+  //CoStartOS(); 
 }
 
    
@@ -59,8 +81,8 @@ if (COM1.HasData()){
     getChar = COM1.Get();
   }
   if (0 == (0x1FFFFF & counter++)){
-    LEDS.Toggle(0);
-    LEDS.Toggle(1);
+    LED_Toggle(0);
+    LED_Toggle(1);
     COM1.Print("Bui Van Hieu\n");
 
   }

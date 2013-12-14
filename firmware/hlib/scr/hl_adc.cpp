@@ -1,5 +1,5 @@
 /**
- @file hl_adc_c.cpp
+ @file hl_adc.cpp
  @brief Implementing methods for ADCs in <b> HLib's MBoards </b>
  
  @author Bui Van Hieu 

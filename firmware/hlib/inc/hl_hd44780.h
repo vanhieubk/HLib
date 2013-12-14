@@ -1,5 +1,5 @@
 /**
- * @file hl_hd44780_c.h
+ * @file hl_hd44780.h
  * functions controlling hd44780-based LCD
  *
  * @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
@@ -17,27 +17,27 @@
  * You are prohibited from commercializing in any kind that using or basing on these works
  * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
  */
-#ifndef __HL_HD44780_C_H
-#define __HL_HD44780_C_H
+#ifndef __HL_HD44780_H
+#define __HL_HD44780_H
 
 ///////////////////////////////////////
-#define HD44780_CLEAR_DISPLAY_CMD          0x01
-#define HD44780_CURSOR_HOME_CMD            0x02
-#define HD44780_ENTRY_MODE_CMD             0x04
-#define HD44780_DISPLAY_ON_OFF_CMD         0x08
-#define HD44780_CURSOR_DISPLAY_SHIFT_CMD   0x10
-#define HD44780_FUNCTION_SET_CMD           0x20
-#define HD44780_SET_CGRAM_ADDRESS_CMD      0x40
-#define HD44780_SET_DDRAM_ADDRESS_CMD      0x80
+#define HD44780_CLEAR_DISPLAY_CMD           0x01 /**< Clear display command*/
+#define HD44780_CURSOR_HOME_CMD             0x02 /**< Set cursor to home command*/
+#define HD44780_ENTRY_MODE_CMD              0x04 /**< Set entry mode command*/
+#define HD44780_DISPLAY_ON_OFF_CMD          0x08 /**< Set display ON/OFF command*/
+#define HD44780_CURSOR_DISPLAY_SHIFT_CMD    0x10 /**< Set cursor shift command*/
+#define HD44780_FUNCTION_SET_CMD            0x20 /**< Set function mode command*/
+#define HD44780_SET_CGRAM_ADDRESS_CMD       0x40 /**< Set CGRAM addresss command*/
+#define HD44780_SET_DDRAM_ADDRESS_CMD       0x80 /**< Set DDRAM address command*/
 
-#define HD44780_CLEAR_DISPLAY_DELAY         24000 
-#define HD44780_CURSOR_HOME_DELAY           24000 
-#define HD44780_ENTRY_MODE_DELAY            24000 
-#define HD44780_DISPLAY_ON_OFF_DELAY        24000 
-#define HD44780_CURSOR_DISPLAY_SHIFT_DELAY  24000 
-#define HD44780_FUNCTION_SET_DELAY          400000 
-#define HD44780_SET_CGRAM_ADDRESS_DELAY     200 
-#define HD44780_SET_DDRAM_ADDRESS_DELAY     200 
+#define HD44780_CLEAR_DISPLAY_DELAY         24000 	/**< Delay time after clear display command*/ 
+#define HD44780_CURSOR_HOME_DELAY           24000 	/**< Delay time after set cursor to home command*/ 
+#define HD44780_ENTRY_MODE_DELAY            24000 	/**< Delay time after set entry mode command*/ 
+#define HD44780_DISPLAY_ON_OFF_DELAY        24000 	/**< Delay time after set display ON/OFF command*/ 
+#define HD44780_CURSOR_DISPLAY_SHIFT_DELAY  24000 	/**< Delay time after set cursor shift command*/ 
+#define HD44780_FUNCTION_SET_DELAY          400000 	/**< Delay time after set function mode command*/ 
+#define HD44780_SET_CGRAM_ADDRESS_DELAY     200 		/**< Delay time after set CGRAM address command*/ 
+#define HD44780_SET_DDRAM_ADDRESS_DELAY     200 		/**< Delay time after set DDRAM address command*/ 
 
 #ifdef PLATFORM_STM32F100_STARTER
 	#define HD44780_RS_PORT     GPIOA
@@ -64,6 +64,11 @@
   #error "Unsupported platform"
 #endif
 
+
+/**
+ @class hd44780_c
+ @brief Providing all methods to control HD44780 LCD for STM32 STARTER KIT
+*/
 class hd44780_c {
 private:
   void Write(uint8_t data, bool isCmd);
@@ -85,4 +90,4 @@ public:
   void Print(int32_t printNum);
 };
 
-#endif /*__HL_HD44780_C_H  */
+#endif /*__HL_HD44780_H  */

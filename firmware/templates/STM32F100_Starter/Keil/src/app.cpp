@@ -41,7 +41,7 @@ void Loop(void){
       default: LCD.Print((char) getChar);
     }
   }
-  if (0 == (0x1FFFFF & counter++)){
+  if (0 == (0x1FFFF & counter++)){
     LEDS.Toggle(0);
     LEDS.Toggle(1);
     COM1.Print("Bui Van Hieu\n");

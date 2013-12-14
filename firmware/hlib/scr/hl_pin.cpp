@@ -1,10 +1,10 @@
 /**
- @file hl_pins_c.cpp
- @brief Implementing I/O controlling methods
+ @file hl_pin.cpp
+ @brief Providing I/O functions for all the PINs in a platform
 
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- @version 1.0
- @date 01-09-2013
+ @version 2.0
+ @date 10-12-2013
 
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -17,12 +17,7 @@
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 
- @class pins_c 
- @brief Providing I/O functions for all the PINs in an platform
  @attention 
- - HLib library has already defined global instance PINs for this class. You should use
- this instance to control I/O function. You do not create another instance of this class
- or abnormal operating may happen.
  - Current version does not support external trigger interrupt.
  - The library does not support remap feature for the STM32F100 STARTER KIT.
 */
@@ -37,6 +32,7 @@
       {GPIOB, GPIO_Pin_6},  {GPIOB, GPIO_Pin_7},
       {GPIOB, GPIO_Pin_8},  {GPIOB, GPIO_Pin_9},  {GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_11},
     };
+		
 #elif defined (PLATFORM_MBOARD_ONE)
   #define IO_NUM_OF_PIN 14
   const port_pin_t pinMap[IO_NUM_OF_PIN] = 
@@ -50,14 +46,16 @@
 #endif
 
 ///////////////////////////////////////////////////
+/** \addtogroup  PIN_Group Setting and controlling PINs 
+ @{
+*/
 
 
-///////////////////////////////////////////////////
 /**
- @brief Construction function. Enable GPIO clocks
+ @brief  Start PIN's clocks.
  @return None
 */
-pins_c::pins_c(){
+void PIN_Start(void){
   #ifdef PLATFORM_STM32F100_STARTER
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
@@ -77,7 +75,7 @@ pins_c::pins_c(){
   @param pinIndex Index of the pin
   @return None
 */
-void pins_c::Release(uint8_t pinIndex){
+void PIN_Release(uint8_t pinIndex){
   GPIO_InitTypeDef  GPIO_InitStruct;
   
   #if defined(PLATFORM_STM32F100_STARTER) || defined(PLATFORM_MBOARD_ONE)
@@ -121,10 +119,10 @@ void pins_c::Release(uint8_t pinIndex){
  which use same pin are enabled. This library cannot handle these situations. You have to
  ensure that no pin are used by different peripheral at the same time 
 */
-err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
+err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   GPIO_InitTypeDef  GPIO_InitStruct;
   bool combineOk = true;
-  bool assignOk = false;
+  bool assignOk  = false;
   
   #ifdef PLATFORM_STM32F100_STARTER
     /* check valid mode assignment */
@@ -133,16 +131,16 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
     }
     else{
       switch (pinIndex){ 
-        case 0: if ((ADC1_CH_0 == mode) || (TIM2_CH_1 == mode)) {assignOk = true;} break;
-        case 1: if ((ADC1_CH_1 == mode) || (TIM2_CH_2 == mode)) {assignOk = true;} break;
-        case 2: if ((ADC1_CH_2 == mode) || (TIM2_CH_3 == mode) || (UART2_TXD == mode)) {assignOk = true;} break;
-        case 3: if ((ADC1_CH_3 == mode) || (TIM2_CH_4 == mode) || (UART2_RXD == mode)) {assignOk = true;} break;
+        case 0: if ((ADC1_CH_0  == mode) || (TIM2_CH_1 == mode)) {assignOk = true;} break;
+        case 1: if ((ADC1_CH_1  == mode) || (TIM2_CH_2 == mode)) {assignOk = true;} break;
+        case 2: if ((ADC1_CH_2  == mode) || (TIM2_CH_3 == mode) || (UART2_TXD == mode)) {assignOk = true;} break;
+        case 3: if ((ADC1_CH_3  == mode) || (TIM2_CH_4 == mode) || (UART2_RXD == mode)) {assignOk = true;} break;
         case 4: if ( DAC1_OUT_1 == mode) {assignOk = true;} break;
-        case 5: if ((SPI1_SCK  == mode) || (DAC1_OUT_2 == mode)) {assignOk = true;} break;
-        case 6: if ( SPI1_MISO == mode) {assignOk = true;}  break;
-        case 7: if ( SPI1_MOSI == mode) {assignOk = true;}  break;
-        case 8: if ( I2C1_SCL  == mode) {assignOk = true;}  break;
-        case 9: if ( I2C1_SDA  == mode) {assignOk = true;}  break;
+        case 5: if ((SPI1_SCK   == mode) || (DAC1_OUT_2 == mode)) {assignOk = true;} break;
+        case 6: if ( SPI1_MISO  == mode) {assignOk = true;}  break;
+        case 7: if ( SPI1_MOSI  == mode) {assignOk = true;}  break;
+        case 8: if ( I2C1_SCL   == mode) {assignOk = true;}  break;
+        case 9: if ( I2C1_SDA   == mode) {assignOk = true;}  break;
       }
     }
 
@@ -185,26 +183,36 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
 
     /* set pin mode if inputs are valid */
     if ((assignOk == true) && (combineOk == true)){
-      GPIO_InitStruct.GPIO_Pin   = pinMap[pinIndex].pin;
-      GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-      switch (type){
-        case ANALOG_INPUT:
-        case ANALOG_OUTPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
-        case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-        case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-        case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-        case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
-        case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
-      }
-      GPIO_Init(pinMap[pinIndex].port, &GPIO_InitStruct);
-      return HL_OK;
+			if (GPIO == mode){
+				switch (type){
+					case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+					case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+					case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+					case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
+					case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
+				}
+			}
+			else{
+				switch (type){
+					case ANALOG_INPUT:
+					case ANALOG_OUTPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
+					case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+					case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+					case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+					case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
+					case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
+				}	
+			}
+			GPIO_InitStruct.GPIO_Pin   = pinMap[pinIndex].pin;
+			GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;      GPIO_Init(pinMap[pinIndex].port, &GPIO_InitStruct);
+		  return HL_OK;
     }
     else{
       return HL_INVALID;
     }
   #elif defined(PLATFORM_MBOARD_ONE)
     #warning "Add code processig MBoard1 pin init"
-	return HL_OK;
+	  return HL_OK;
   #else
     #error "Unsupported platform"
   #endif
@@ -220,7 +228,7 @@ err_t pins_c::SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void pins_c::SetOutVal(uint8_t pinIndex, bool val){
+void PIN_SetOutVal(uint8_t pinIndex, bool val){
   if (0 == val){
     GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
   }
@@ -238,7 +246,7 @@ void pins_c::SetOutVal(uint8_t pinIndex, bool val){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void pins_c::SetOutOne(uint8_t pinIndex){
+void PIN_SetOutOne(uint8_t pinIndex){
   GPIO_SetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }
 
@@ -250,7 +258,7 @@ void pins_c::SetOutOne(uint8_t pinIndex){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void pins_c::SetOutZero(uint8_t pinIndex){
+void PIN_SetOutZero(uint8_t pinIndex){
   GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }
 
@@ -262,6 +270,8 @@ void pins_c::SetOutZero(uint8_t pinIndex){
   @retval true pin is 1
   @retval false pin is 0
 */
-bool pins_c::GetInput(uint8_t pinIndex){
+bool PIN_GetInput(uint8_t pinIndex){
   return GPIO_ReadInputDataBit(pinMap[pinIndex].port, pinMap[pinIndex].pin);
 }
+
+/** @}*/

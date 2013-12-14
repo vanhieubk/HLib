@@ -1,10 +1,10 @@
 /**
- @file hl_leds_c.h
- @brief Providing single-color LEDs control utilities for MBoards
+ @file hl_led.h
+ @brief Providing single-color LEDs control utilities
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
  @version 1.0
- @date 04-09-2013
+ @date 10-12-2013
  
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -18,27 +18,15 @@
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
 
-#ifndef __HL_LEDS_C_H
-#define __HL_LEDS_C_H
+#ifndef __HL_LED_H
+#define __HL_LED_H
 
-#ifdef PLATFORM_STM32F100_STARTER
-  #define NUM_OF_LEDS 2
-#elif defined (PLATFORM_MBOARD_ONE)
-  #define NUM_OF_LEDS 1  
-#else
-  #error "Unsupported platform"
-#endif
+void  LED_Start(void);
+void  LED_Set(uint8_t ledIndex, bool val);
 
-class leds_c{
-private:
-  uint8_t ledsState[NUM_OF_LEDS];
-public: 
-  leds_c(void);
-  void  Set(uint8_t ledIndex, bool val);
+void  LED_On(uint8_t ledIndex);
+void  LED_Off(uint8_t ledIndex);
+void  LED_Toggle(uint8_t ledIndex);
 
-  void  On(uint8_t ledIndex);
-  void  Off(uint8_t ledIndex);
-  void  Toggle(uint8_t ledIndex);
-};
 
-#endif /* __HL_LEDS_C_H */
+#endif /* __HL_LED_H */

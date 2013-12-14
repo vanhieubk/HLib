@@ -1,5 +1,5 @@
 /**
- @file hl_uart_c.h
+ @file hl_uart.h
  @brief Declaring serial communication methods
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
@@ -16,16 +16,21 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- @attention
- This library always enable receiving feature. Current version only support polling receiving.
- DMA transfer/receiver has not been supported\n.
- Interrupt receiving will be implemented in next version\n
- This library does not support parity check. If you need this feature, please contact us.
 */
 
-#ifndef __HL_UART_C_H
-#define __HL_UART_C_H
+#ifndef __HL_UART_H
+#define __HL_UART_H
 
+/**
+ @class uart_c
+ @brief Providing controlling method for USART peripheral of STM32
+ @attention
+ - The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1
+ - This library always enables receiving feature.
+ - DMA transfer/receiver has not been supported\n.
+ - Current version only supports polling receiving. Interrupt receiving will be implemented in next version
+ - This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
+*/
 class uart_c {
 private:
   uint8_t    uartNum;
@@ -50,4 +55,4 @@ public:   uart_c(uint8_t uartNum);
   bool    HasData(void);
 };
 
-#endif /*__HL_UART_C_H */
+#endif /*__HL_UART_H */

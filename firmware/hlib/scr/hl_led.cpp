@@ -1,10 +1,10 @@
 /**
- @file hl_leds_c.cpp
- @brief Providing single-color LEDs control utilities for MBoards
+ @file hl_led.cpp
+ @brief Providing single-color LEDs control utilities
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- @version 1.0
- @date 04-09-2013
+ @version 2.0
+ @date 10-12-2013
  
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -17,30 +17,31 @@
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
  
- @class leds_c
  @brief Providing controlling function for LEDs of a platform
- @attention
- - HLib firmware has reserved one instance of this class as LEDs. 
- To avoid confliction, please do not create an instance of this class.
 */
 
 #include "hlib.h"
 
 #ifdef PLATFORM_STM32F100_STARTER
+  #define NUM_OF_LEDS 2
   const port_pin_t ledsMap[NUM_OF_LEDS] = { {GPIOA, GPIO_Pin_11}, {GPIOA, GPIO_Pin_12} };
 #elif defined (PLATFORM_MBOARD_ONE)
+  #define NUM_OF_LEDS 1  
   const port_pin_t ledsMap[NUM_OF_LEDS] = { {GPIOC, GPIO_Pin_4 } };
 #else
   #error "Unsupported platform"
 #endif
 
 
+/////////////////////////////////////////////////
+static  uint8_t ledsState[NUM_OF_LEDS];
 
+/////////////////////////////////////////////////
 /**
- @brief Construction. Enable clock, set output mode for LEDs' pins
+ @brief  Start LEDs, turn on all LEDs
  @return None
 */ 
-leds_c::leds_c(void){
+void LED_Start(void){
   uint8_t ledCount;
   GPIO_InitTypeDef  GPIO_InitStruct;
 
@@ -75,7 +76,7 @@ leds_c::leds_c(void){
  @param val TRUE turn on the LED, FALSE turn off the LED
  @return None
 */
-void leds_c::Set(uint8_t ledIndex, bool val){
+void LED_Set(uint8_t ledIndex, bool val){
   if (ledIndex < NUM_OF_LEDS){
     if (false == val){
       GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
@@ -95,7 +96,7 @@ void leds_c::Set(uint8_t ledIndex, bool val){
  @param ledIndex Index or the LED
  @return None
 */
-void leds_c::On(uint8_t ledIndex){
+void LED_On(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
     ledsState[ledIndex] = 1;
@@ -109,7 +110,7 @@ void leds_c::On(uint8_t ledIndex){
  @param ledIndex Index or the LED
  @return None
 */
-void leds_c::Off(uint8_t ledIndex){
+void LED_Off(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
     ledsState[ledIndex] = 0;
@@ -123,7 +124,7 @@ void leds_c::Off(uint8_t ledIndex){
  @param ledIndex Index or the LED
  @return None
 */
-void leds_c::Toggle(uint8_t ledIndex){
+void LED_Toggle(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     if (1 == ledsState[ledIndex]){
       GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);

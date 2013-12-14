@@ -22,13 +22,13 @@
 #define __TMP121_C_H
 
 class tmp121_c{
-  spi_i2s_c*  ctlSpi;
+  spi_base_c*  ctlSpi;
   uint8_t     csPinIndex;
 public:
-           tmp121_c(spi_i2s_c* ctlSpi, uint8_t csPinIndex);
+           tmp121_c(spi_base_c* ctlSpi, uint8_t csPinIndex);
   err_t    Start(void);
   void     Shutdown(void);
-  int16_t Read(void);
+  int16_t  Read(void);
 };
 
 #endif /* __TMP121_C_H */

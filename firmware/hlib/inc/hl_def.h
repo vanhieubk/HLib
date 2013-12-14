@@ -22,11 +22,9 @@
 #define __HL_DEF_H
 
 #include <stddef.h>
-
-//  DEFINE  ///////////////////////////
-#define BIT_Mask(pos) (1 <<(pos))
-#define BIT_Set(var, pos) (var) |= BIT_Mask(pos)
-#define BIT_Clear(var, pos) (var) &= ~BIT_Mask(pos)
+/** \addtogroup HLibGlobalDef HLib's global data structure
+ @{
+*/
 
 //  TYPEDEF  //////////////////////////
 /**
@@ -40,9 +38,13 @@ typedef enum {
   HL_UNKNOW = 4     /**< Function enters some errors with unknow reasons */
 } err_t;
 
+/**
+ @brief Data structure represent port and pin of a STM32 physical pin
+*/
 typedef struct {
   GPIO_TypeDef* port; /**< Port of a I/O pin */
   uint16_t pin;       /**< Pin number of a I/O pin */
 } port_pin_t;
 
+/** @} */
 #endif /* __HL_DEF_H */

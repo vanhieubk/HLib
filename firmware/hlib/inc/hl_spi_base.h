@@ -1,10 +1,10 @@
 /**
- @file hl_spi_i2s_c.h
+ @file hl_spi_base.h
  @brief Declaring SPI/I2S communication methods 
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- @version 1.0
- @date 01-09-2013
+ @version 1.1
+ @date 10-12-2013
  
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -18,8 +18,8 @@
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
  
-#ifndef __HL_SPI_I2S_C_H
-#define __HL_SPI_I2S_C_H
+#ifndef __HL_SPI_BASE_H
+#define __HL_SPI_BASE_H
 
 #include "stm32f10x_conf.h"
 
@@ -41,22 +41,21 @@ typedef enum{
   SPI_2LINES_RX_TX   = ((uint16_t)0x0000)  /**< SPI works in full-duplex mode with both receiving and transmitting are enabled */
 } spi_direction_t; 
 
-/**
- @class spi_i2s_c
- @brief Test brief for class
-*/
-class spi_i2s_c {
+
+class spi_base_c {
 private:
-  uint8_t    spiNum;
-  bool       spiStarted;
+  uint8_t    			spiNum;
+  bool       			spiStarted;
   SPI_TypeDef *		SPIx;
-public: spi_i2s_c(uint8_t uartNum);
-public:
+public: 
+	spi_base_c(uint8_t uartNum);
+
   err_t     Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge, bool firstBitMSB, spi_direction_t direction, bool crcEnable, uint16_t crcPoly);
   err_t     Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge);
   void      Shutdown();
   void      Send(uint8_t sendData);
   void      Send(uint8_t sendBuf[], uint16_t bufLen); 
+	uint8_t   SendRecv(uint8_t sendData);
   void      SendRecv(uint8_t sendData, uint8_t *recvData);
   void      SendRecv(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen); 
   uint16_t  GetCRCPoly();
@@ -67,4 +66,4 @@ public:
   bool      IsBusy();               
 };
 
-#endif /*__HL_SPI_I2S_C_H */
+#endif /*__HL_SPI_BASE_H */

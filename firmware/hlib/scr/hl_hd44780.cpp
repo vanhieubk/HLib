@@ -1,5 +1,5 @@
 /**
- * @file lcd_hd44780.cpp
+ * @file hl_hd44780.cpp
  * Providing functions controlling hd44780-based LCDs
  *
  * @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>

@@ -1,10 +1,10 @@
 /**
- @file hl_pins_c.h
+ @file hl_pin.h
  @brief Declaring general purpose I/O functions
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- @version 1.0
- @date 01-09-2013
+ @version 2.0
+ @date 10-12-2013
  
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -18,9 +18,12 @@
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
 
-#ifndef __HL_PINS_C_H
-#define __HL_PINS_C_H
+#ifndef __HL_PIN_H
+#define __HL_PIN_H
 
+/**
+ @brief Available mode of PINs in an MBoard
+*/
 typedef enum{
   GPIO, 		  /**< Pin is connected with the general purpose input/output, used for getting 0/1 input or controlling 0/1 output */
   ADC1_CH_0, 	/**< Pin is connected with channel 0 of ADC0*/ 
@@ -43,6 +46,10 @@ typedef enum{
   I2C1_SDA 		/**< Pin is connected with SDA of I2C1*/
 } pin_mode_t;
 
+
+/**
+ @brief Electrical type of PINs in an MBoard
+*/
 typedef enum {
   ANALOG_INPUT, 	  /**< An analog input, used for ADC mode */
   FLOATING_INPUT,   /**< An floating input */
@@ -53,15 +60,14 @@ typedef enum {
   OPEN_DRAIN_OUTPUT /**< An open drain output */
 } pin_type_t;
 
-class pins_c{
-public: 
-  pins_c(void);
-  void  Release(uint8_t pinIndex);
-  err_t SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type);
-  void  SetOutVal(uint8_t pinIndex, bool val);
-  void  SetOutOne(uint8_t pinIndex);
-  void  SetOutZero(uint8_t pinIndex);
-  bool  GetInput(uint8_t pinIndex);
-};
 
-#endif /* __HL_IO_C_H */
+/////////////////////////////////////
+void  PIN_Start(void);
+void  PIN_Release(uint8_t pinIndex);
+err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type);
+void  PIN_SetOutVal(uint8_t pinIndex, bool val);
+void  PIN_SetOutOne(uint8_t pinIndex);
+void  PIN_SetOutZero(uint8_t pinIndex);
+bool  PIN_GetInput(uint8_t pinIndex);
+
+#endif /* __HL_PIN_H */

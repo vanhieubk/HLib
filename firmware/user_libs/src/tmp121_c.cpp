@@ -27,7 +27,7 @@
  @param csPinIndex Pin index of the chip select pin
  @return None
 */
-tmp121_c::tmp121_c(spi_i2s_c* ctlSpi, uint8_t csPinIndex){
+tmp121_c::tmp121_c(spi_base_c* ctlSpi, uint8_t csPinIndex){
   this->ctlSpi = ctlSpi;
   this->csPinIndex = csPinIndex;
 }
@@ -51,11 +51,11 @@ err_t tmp121_c::Start(void){
   if (retCode != HL_OK){
     return retCode;
   }
-  retCode = PINS.SetMode(csPinIndex, ...);
+  retCode = PIN_SetMode(csPinIndex, ...);
   if (retCode != HL_OK){
     return retCode;
   }
-  PINS.SetOutVal(csPinIndex, ...);
+  PIN_SetOutVal(csPinIndex, ...);
   */
    
   return retCode;
@@ -69,7 +69,7 @@ err_t tmp121_c::Start(void){
 */
 void tmp121_c::Shutdown(void){
   ctlSpi->Shutdown();
-  PINS.Release(csPinIndex);
+  PIN_Release(csPinIndex);
 }
 
 
@@ -85,13 +85,13 @@ int16_t tmp121_c::Read(void){
   int16_t  readTmp;
   //MODIFY CODE BELOW
   /*
-  PINS.SetOutVal(csPinIndex, ...);
+  PIN_SetOutVal(csPinIndex, ...);
   HL_LoopDelay(0 or ...);
   ctlSpi->SendRecv(0x55, &spiRecv);
   readVal = (0/8 ???) << ((uint16_t) spiRecv);
   ctlSpi->SendRecv(0x55, &spiRecv);
   readVal |= (0/8 ???) << ((uint16_t) spiRecv);
-  PINS.SetOutVal(csPinIndex, ...);
+  PIN_SetOutVal(csPinIndex, ...);
   readTmp = readVal +-* /...
   */
   return readTmp;
