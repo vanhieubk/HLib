@@ -16,21 +16,10 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- 
- @class adc_c
- @brief Providing controlling method for ADC peripheral of a STM32
- @attention
 */
-
-#ifdef INITIAL_CHECK 
-  #define _ADC_CONSTRUCT_CHECK() if (adcNum == NULL) {return HL_INVALID;} 
-  #define _ADC_STARTED_CHECK()   if (adcStarted == false) {return HL_NOT_START;} 
-#else
-  #define _ADC_CONSTRUCT_CHECK()
-  #define _ADC_STARTED_CHECK()
-#endif
-
 #include "hlib.h"
+namespace HLib{
+
 
 ///////////////////////////////////////////////////////
 /** 
@@ -98,7 +87,6 @@ err_t adc_c::Start(){ /*adcMode = independent, triggerSource = software, singleC
  @return HL_OK, HL_INVALID
 */
 err_t adc_c::Shutdown(){
-  _ADC_CONSTRUCT_CHECK();
   /*ADD CODE HERE */  
   return HL_OK;
 }
@@ -110,7 +98,6 @@ err_t adc_c::Shutdown(){
  @return NONE
 */
 void adc_c::Calib(){
-  _ADC_CONSTRUCT_CHECK();
 }
 
 
@@ -227,11 +214,9 @@ void adc_c::ClearFlag(uint16_t flag){
 
 
 
-/**
- @brief
- @param
- @param
- @return
-*/
+
+} /* namespace */
+
+
 
 

@@ -21,11 +21,23 @@
 #ifndef __HL_PIN_H
 #define __HL_PIN_H
 
+namespace HLib{
+/**
+ @brief Data structure represent port and pin of a STM32 physical pin
+*/
+typedef struct {
+	clk_periph_t  clk;  /**< Clock source of GPIO */
+  GPIO_TypeDef* port; /**< Port of a I/O pin */
+  uint16_t      pin;  /**< Pin number of a I/O pin */
+} pin_t;
+
+
 /**
  @brief Available mode of PINs in an MBoard
 */
 typedef enum{
   GPIO, 		  /**< Pin is connected with the general purpose input/output, used for getting 0/1 input or controlling 0/1 output */
+	ALT_FUNC,   /**< Pin is connected with an unspecified peripheral*/
   ADC1_CH_0, 	/**< Pin is connected with channel 0 of ADC0*/ 
   ADC1_CH_1, 	/**< Pin is connected with channel 1 of ADC0*/
   ADC1_CH_2, 	/**< Pin is connected with channel 2 of ADC0*/
@@ -62,12 +74,15 @@ typedef enum {
 
 
 /////////////////////////////////////
-void  PIN_Start(void);
-void  PIN_Release(uint8_t pinIndex);
-err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type);
-void  PIN_SetOutVal(uint8_t pinIndex, bool val);
-void  PIN_SetOutOne(uint8_t pinIndex);
-void  PIN_SetOutZero(uint8_t pinIndex);
-bool  PIN_GetInput(uint8_t pinIndex);
+void  		PIN_Start(void);
+void  		PIN_Start(uint8_t numPin, pin_t pinMap[]);
+void  		PIN_Release(uint8_t pinIndex);
+err_t 		PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type);
+void  		PIN_OutVal(uint8_t pinIndex, bool val);
+void  		PIN_OutOne(uint8_t pinIndex);
+void  		PIN_OutZero(uint8_t pinIndex);
+bool  		PIN_GetInput(uint8_t pinIndex);
+uint8_t   PIN_NumPin(void);
 
+} /* namespace */
 #endif /* __HL_PIN_H */

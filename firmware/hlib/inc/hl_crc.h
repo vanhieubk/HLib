@@ -21,6 +21,9 @@
 #ifndef __HL_CRC_H
 #define __HL_CRC_H
 
+namespace HLib{
+
+
 /**
  @class CRC_c
  @brief Providing controlling method for CRC peripheral of STM32
@@ -42,4 +45,5 @@ public:
     bool 			Check(uint32_t dataBuffer[], uint16_t bufferSize, uint32_t receivedCRC);
 }; //end class
 
+} /* namespace */
 #endif //__HL_CRC_H

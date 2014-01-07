@@ -1,7 +1,7 @@
 #include "hlib.h"
 #include "tlc5971_c.h"
 
-tlc5971_c::tlc5971_c(spi_base_c* spi){
+tlc5971_c::tlc5971_c(HLib::spi_base_c* spi){
   usedSpi = spi;
   SetCmd(0x25);
   SetFc(CreateFc(true, false, false, true, true));

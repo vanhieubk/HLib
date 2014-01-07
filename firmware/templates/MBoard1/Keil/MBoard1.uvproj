@@ -341,7 +341,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -489,11 +489,6 @@
               <FilePath>..\..\..\st_lib\stm32f1xx\src\stm32f10x_pwr.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_rcc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\st_lib\stm32f1xx\src\stm32f10x_rcc.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\st_lib\stm32f1xx\src\stm32f10x_rtc.c</FilePath>
@@ -522,6 +517,11 @@
               <FileName>stm32f10x_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\st_lib\stm32f1xx\src\stm32f10x_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_rcc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\st_lib\stm32f1xx\src\stm32f10x_rcc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -559,11 +559,6 @@
               <FilePath>..\..\..\hlib\scr\hl_crc.cpp</FilePath>
             </File>
             <File>
-              <FileName>hl_hd44780.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\hlib\scr\hl_hd44780.cpp</FilePath>
-            </File>
-            <File>
               <FileName>hl_spi_base.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\hlib\scr\hl_spi_base.cpp</FilePath>
@@ -572,6 +567,16 @@
               <FileName>hl_uart.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\hlib\scr\hl_uart.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>hl_clk.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\hlib\scr\hl_clk.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>hl_hd44780.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\hlib\scr\hl_hd44780.cpp</FilePath>
             </File>
           </Files>
         </Group>

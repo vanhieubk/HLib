@@ -16,11 +16,11 @@
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
+#include "hlib.h"
+namespace HLib{
 
 
 /***********************************************************************/
-#include "hlib.h"
-
 /**
  @brief Enable CRC clock, reset all registers to default values
  @return None
@@ -123,4 +123,8 @@ uint32_t CRC_c::CalculateCont(uint32_t dataBuffer[], uint16_t bufferSize) {
 bool CRC_c::Check(uint32_t dataBuffer[], uint16_t bufferSize, uint32_t receivedCRC) {
   return (receivedCRC == Calculate(dataBuffer, bufferSize));
 }
+
+
+} /* namespace */
+
 

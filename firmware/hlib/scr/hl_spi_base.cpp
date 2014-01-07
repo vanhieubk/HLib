@@ -29,6 +29,9 @@
 
 
 #include "hlib.h"
+namespace HLib{
+
+
 
 #define CR1_CRCNext_Set      ((uint16_t)0x1000)
 #define CR1_SPE_Set          ((uint16_t)0x0040)
@@ -348,3 +351,7 @@ extern "C" {
 #endif
   
 } /* end extern "C" */
+
+
+} /* namespace */
+

@@ -22,6 +22,7 @@
 #define __HL_SPI_BASE_H
 
 #include "stm32f10x_conf.h"
+namespace HLib{
 
 typedef enum{
   SPI_PRESCALER_256 = ((uint16_t)0x0038), /**< SPI clock is PCLK divided by 256 */
@@ -66,4 +67,5 @@ public:
   bool      IsBusy();               
 };
 
+} /* namespace */
 #endif /*__HL_SPI_BASE_H */

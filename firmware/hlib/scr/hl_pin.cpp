@@ -22,29 +22,44 @@
  - The library does not support remap feature for the STM32F100 STARTER KIT.
 */
 #include "hlib.h"
+namespace HLib{
 
-///////////////////////////////////////////////////
+
+////   STATIC VARIABLEs   ///////////////////////////////////////////////
 #ifdef PLATFORM_STM32F100_STARTER
-  #define IO_NUM_OF_PIN 14
-  const port_pin_t pinMap[IO_NUM_OF_PIN] = 
-    { {GPIOA, GPIO_Pin_0},  {GPIOA, GPIO_Pin_1},  {GPIOA, GPIO_Pin_2},  {GPIOA, GPIO_Pin_3},
-      {GPIOA, GPIO_Pin_4},  {GPIOA, GPIO_Pin_5},  {GPIOA, GPIO_Pin_6},  {GPIOA, GPIO_Pin_7},
-      {GPIOB, GPIO_Pin_6},  {GPIOB, GPIO_Pin_7},
-      {GPIOB, GPIO_Pin_8},  {GPIOB, GPIO_Pin_9},  {GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_11},
+  #define NUM_OF_PIN 23
+  const pin_t  dfl_pinMap[NUM_OF_PIN] = 
+    { {CLK_GPIOA, GPIOA, GPIO_Pin_0},   {CLK_GPIOA, GPIOA, GPIO_Pin_1},  /* ADC0 - ADC1 */ 
+		  {CLK_GPIOA, GPIOA, GPIO_Pin_2},   {CLK_GPIOA, GPIOA, GPIO_Pin_3},  /* ADC2 - ADC3 */
+      {CLK_GPIOA, GPIOA, GPIO_Pin_4},   {CLK_GPIOA, GPIOA, GPIO_Pin_5},  /* NSS  - SCK */
+  		{CLK_GPIOA, GPIOA, GPIO_Pin_6},   {CLK_GPIOA, GPIOA, GPIO_Pin_7},  /* MISO - MOSI */
+		  {CLK_GPIOA, GPIOA, GPIO_Pin_8},   {CLK_GPIOB, GPIOB, GPIO_Pin_0},  /* RS   - RW  */
+  	  {CLK_GPIOB, GPIOB, GPIO_Pin_1},   {CLK_GPIOB, GPIOB, GPIO_Pin_12}, /* EN   - D4 */
+  	  {CLK_GPIOB, GPIOB, GPIO_Pin_13},  {CLK_GPIOB, GPIOB, GPIO_Pin_14}, /* D5   - D6 */
+	    {CLK_GPIOB, GPIOB, GPIO_Pin_15},  {CLK_GPIOA, GPIOA, GPIO_Pin_9},  /* D7   - TXD */
+  	  {CLK_GPIOA, GPIOA, GPIO_Pin_10},  {CLK_GPIOB, GPIOB, GPIO_Pin_6},  /* RXD  - SCL*/
+   		{CLK_GPIOB, GPIOB, GPIO_Pin_7},   {CLK_GPIOB, GPIOB, GPIO_Pin_8},  /* SDA  - PB8*/
+  		{CLK_GPIOB, GPIOB, GPIO_Pin_9},	  {CLK_GPIOB, GPIOB, GPIO_Pin_10}, /* PB9  - PB10*/
+  		{CLK_GPIOB, GPIOB, GPIO_Pin_11}																		 /* PB11       */	
     };
 		
 #elif defined (PLATFORM_MBOARD_ONE)
-  #define IO_NUM_OF_PIN 14
-  const port_pin_t pinMap[IO_NUM_OF_PIN] = 
-    { {GPIOA, GPIO_Pin_0},  {GPIOA, GPIO_Pin_1},  {GPIOA, GPIO_Pin_2},  {GPIOA, GPIO_Pin_3},
-      {GPIOA, GPIO_Pin_4},  {GPIOA, GPIO_Pin_5},  {GPIOA, GPIO_Pin_6},  {GPIOA, GPIO_Pin_7},
+  #define NUM_OF_PIN 140
+  pin_t _pinMap[NUM_OF_PIN] = 
+    { {GPIOA, GPIO_Pin_0},  {GPIOA, GPIO_Pin_1},
+  		{GPIOA, GPIO_Pin_2},  {GPIOA, GPIO_Pin_3},
+      {GPIOA, GPIO_Pin_4},  {GPIOA, GPIO_Pin_5},
+  		{GPIOA, GPIO_Pin_6},  {GPIOA, GPIO_Pin_7},
       {GPIOB, GPIO_Pin_6},  {GPIOB, GPIO_Pin_7},
-      {GPIOB, GPIO_Pin_8},  {GPIOB, GPIO_Pin_9},  {GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_11},
+      {GPIOB, GPIO_Pin_8},  {GPIOB, GPIO_Pin_9},
+  		{GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_11},
     };
 #else
   #error "Unsupported platform"
 #endif
 
+static uint8_t _numPin = NUM_OF_PIN;
+static pin_t*  _pinMap = (HLib::pin_t *) dfl_pinMap;
 ///////////////////////////////////////////////////
 /** \addtogroup  PIN_Group Setting and controlling PINs 
  @{
@@ -52,22 +67,27 @@
 
 
 /**
- @brief  Start PIN's clocks.
+ @brief  Start default platform PIN
  @return None
 */
 void PIN_Start(void){
-  #ifdef PLATFORM_STM32F100_STARTER
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-  #elif defined (PLATFORM_MBOARD_ONE)
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
-  #else
-    #error "Unsupported platform"
-  #endif
+  _numPin = NUM_OF_PIN;
+  _pinMap = (HLib::pin_t *) dfl_pinMap;
 }
+
+
+/**
+ @brief Remap pin map for a customized platform
+ @para numPin Number of pins
+ @para pinMap Array of pin_t corresponding with the customized platform
+ @return None
+ @attention pinMap have to be available for later referencing
+*/
+void  PIN_Start(uint8_t numPin, pin_t pinMap[]){
+	_numPin = numPin;
+	_pinMap = pinMap;
+}
+
 
 
 /**
@@ -78,13 +98,11 @@ void PIN_Start(void){
 void PIN_Release(uint8_t pinIndex){
   GPIO_InitTypeDef  GPIO_InitStruct;
   
-  #if defined(PLATFORM_STM32F100_STARTER) || defined(PLATFORM_MBOARD_ONE)
-    GPIO_InitStruct.GPIO_Pin  = pinMap[pinIndex].pin;
+	if (pinIndex < _numPin){
+    GPIO_InitStruct.GPIO_Pin  = _pinMap[pinIndex].pin;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init(pinMap[pinIndex].port, &GPIO_InitStruct);
-  #else
-    #error "Unsupported platform"
-  #endif
+    GPIO_Init(_pinMap[pinIndex].port, &GPIO_InitStruct);
+	}
 }
 
 
@@ -92,27 +110,36 @@ void PIN_Release(uint8_t pinIndex){
 /**
  @brief Set operation mode for one pin\n
  @details The pins in *STM32F100 STARTER KIT* are mapped as below\n
- PIN NUMBER | BOARD SIGNAL | 5V TOLERANCE | SUPPORTED MODEs
- :--------: | :----------- | ------------ | :-----------------
- 0          | ADC0         |              | ADC1_CH_0/ TIM2_CH_1/ GPIO                
- 1          | ADC1         |              | ADC1_CH_1/ TIM2_CH_2/ GPIO                         
- 2          | ADC2         |              | ADC1_CH_2/ TIM2_CH_3/ UART2_TXD/ GPIO     
- 3          | ADC3         |              | ADC1_CH_3/ TIM2_CH_4/ UART2_RXD/ GPIO     
- 4          | NSS/DAC1     |              | DAC1_OUT_1/ GPIO                  
- 5          | SCK          |              | SPI1_SCK/ DAC1_OUT_2/ GPIO                  
- 6          | MISO         |              | SPI1_MISO/ GPIO                            
- 7          | MOSI         |              | SPI1_MOSI/ GPIO                            
- 8          | SCL          |              | I2C1_SCL/ GPIO                             
- 9          | SDA          |              | I2C1_SDA/ GPIO                             
- 10         | PB8          |              | (TIM16_CH1)/ GPIO                          
- 11         | PB9          |              | (TIM17_CH1)/ GPIO                          
- 12         | PB10         |              | (TIM2_CH3)/ GPIO                          
- 13         | PB11         |              | (TIM2_CH4)/ GPIO                          
+ PIN INDEX | BOARD SIGNAL | 5V TOLERANCE | SUPPORTED MODEs
+ :-------: | :----------- | ------------ | :-----------------
+ 0         | ADC0         |              | ADC1_CH_0/ TIM2_CH_1                
+ 1         | ADC1         |              | ADC1_CH_1/ TIM2_CH_2                         
+ 2         | ADC2         |              | ADC1_CH_2/ TIM2_CH_3/ UART2_TXD     
+ 3         | ADC3         |              | ADC1_CH_3/ TIM2_CH_4/ UART2_RXD     
+ 4         | NSS/DAC1     |              | DAC1_OUT_1                  
+ 5         | SCK          |              | SPI1_SCK/ DAC1_OUT_2                  
+ 6         | MISO         |              | SPI1_MISO                            
+ 7         | MOSI         |              | SPI1_MOSI    
+ 8         | RS    				|              | TIM1_CH_1
+ 9         | RW    				|              | TIM3_CH_3
+ 10        | EN    				|              | TIM3_CH_4
+ 11        | D4    				|              | TIM1_BKIN
+ 12        | D5    				|              | TIM1_CH_1_N
+ 13        | D6    				|              | TIM1_CH_2_N/ TIM15_CH_1
+ 14        | D7    				|              | TIM1_CH_3_N/ TIM15_CH_1_N
+ 15        | TxD    			|              | UART1_TXD/ TIM1_CH_2
+ 16        | RxD    			|              | UART1_RXD/ TIM1_CH_3
+ 17        | SCL          |              | I2C1_SCL/ TIM4_CHA_1/ TIM16_                          
+ 18        | SDA          |              | I2C1_SDA                             
+ 19        | PB8          |              | (TIM16_CH1)                          
+ 20        | PB9          |              | (TIM17_CH1)                          
+ 21        | PB10         |              | (TIM2_CH3)                          
+ 22        | PB11         |              | (TIM2_CH4)                          
  @param pinIndex Index of the pin
  @param mode Operation mode. Please refer the table pin map for valid configuration
  @param type Type of pin
  @return HL_OK, HL_INVALID
- @attention Please select type corresponding with selected mode. If you make a wrong
+ @attention NEED redefine alternate peripheral functions. Please select type corresponding with selected mode. If you make a wrong
  pin configuration, your system may behave in unpredictable manner. Thereforce, we
  strongly recommend that you check return value of the function and make sure it is HL_OK
  @warning Due to limitation of STM32F1xx families, pin's mode may be overrided if multi-peripherals
@@ -121,101 +148,37 @@ void PIN_Release(uint8_t pinIndex){
 */
 err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   GPIO_InitTypeDef  GPIO_InitStruct;
-  bool combineOk = true;
-  bool assignOk  = false;
   
-  #ifdef PLATFORM_STM32F100_STARTER
-    /* check valid mode assignment */
-    if (GPIO == mode){
-      assignOk = true;
-    }
-    else{
-      switch (pinIndex){ 
-        case 0: if ((ADC1_CH_0  == mode) || (TIM2_CH_1 == mode)) {assignOk = true;} break;
-        case 1: if ((ADC1_CH_1  == mode) || (TIM2_CH_2 == mode)) {assignOk = true;} break;
-        case 2: if ((ADC1_CH_2  == mode) || (TIM2_CH_3 == mode) || (UART2_TXD == mode)) {assignOk = true;} break;
-        case 3: if ((ADC1_CH_3  == mode) || (TIM2_CH_4 == mode) || (UART2_RXD == mode)) {assignOk = true;} break;
-        case 4: if ( DAC1_OUT_1 == mode) {assignOk = true;} break;
-        case 5: if ((SPI1_SCK   == mode) || (DAC1_OUT_2 == mode)) {assignOk = true;} break;
-        case 6: if ( SPI1_MISO  == mode) {assignOk = true;}  break;
-        case 7: if ( SPI1_MOSI  == mode) {assignOk = true;}  break;
-        case 8: if ( I2C1_SCL   == mode) {assignOk = true;}  break;
-        case 9: if ( I2C1_SDA   == mode) {assignOk = true;}  break;
-      }
-    }
-
-    /* detect invalid combination */
-    if (GPIO == mode){
-      if ((ANALOG_INPUT == type) || (ANALOG_OUTPUT == type)){
-        combineOk = false;;
-      }
-    }
-    else if ((ADC1_CH_0 == mode) || (ADC1_CH_1 == mode) ||(ADC1_CH_2 == mode) ||(ADC1_CH_3 == mode)){
-      if (ANALOG_INPUT != type){
-        combineOk = false;;
-      }
-    }
-    else if ((DAC1_OUT_1 == mode) ||(DAC1_OUT_2 == mode)){
-      if (ANALOG_OUTPUT != type){
-        combineOk = false;;
-      }
-    }
-    else if ((UART2_RXD == mode) || (SPI1_MISO == mode)){
-      if ((FLOATING_INPUT != type) && (PULL_UP_INPUT != type) && (PULL_DOWN_INPUT != type)){
-        combineOk = false;;
-      }
-    }
-    else if (  (TIM2_CH_1 == mode) || (TIM2_CH_2 == mode) 
-             ||(TIM2_CH_3 == mode) || (TIM2_CH_4 == mode) 
-             ||(UART2_TXD == mode) || (SPI1_SCK  == mode) || (SPI1_MOSI == mode)){
-      if ((PUSH_PULL_OUTPUT != type) && (OPEN_DRAIN_OUTPUT != type)){
-        combineOk = false;;
-      }
-    }
-    else if ((I2C1_SCL == mode) ||(I2C1_SDA == mode)){
-      if (OPEN_DRAIN_OUTPUT != type){
-        combineOk = false;;
-      }
-    }
-    else{
-      combineOk = false;; /* invalid mode */
-    }
-
-    /* set pin mode if inputs are valid */
-    if ((assignOk == true) && (combineOk == true)){
-			if (GPIO == mode){
-				switch (type){
-					case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-					case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-					case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-					case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
-					case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
-				}
-			}
-			else{
-				switch (type){
-					case ANALOG_INPUT:
-					case ANALOG_OUTPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
-					case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-					case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-					case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-					case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
-					case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
-				}	
-			}
-			GPIO_InitStruct.GPIO_Pin   = pinMap[pinIndex].pin;
-			GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;      GPIO_Init(pinMap[pinIndex].port, &GPIO_InitStruct);
-		  return HL_OK;
-    }
-    else{
-      return HL_INVALID;
-    }
-  #elif defined(PLATFORM_MBOARD_ONE)
-    #warning "Add code processig MBoard1 pin init"
-	  return HL_OK;
-  #else
-    #error "Unsupported platform"
-  #endif
+	if (GPIO == mode){
+		switch (type){
+			case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+			case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+			case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+			case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
+			case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
+			default: return HL_INVALID;
+		}
+	}
+	else if (ALT_FUNC ==mode){
+		switch (type){
+			case ANALOG_INPUT:
+			case ANALOG_OUTPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
+			case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+			case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+			case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+			case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
+			case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
+			default: return HL_INVALID;
+		}	
+	}
+	else{
+		return HL_INVALID;
+	}
+	GPIO_InitStruct.GPIO_Pin   = _pinMap[pinIndex].pin;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+	CLK_Ctrl(_pinMap[pinIndex].clk, true);
+	GPIO_Init(_pinMap[pinIndex].port, &GPIO_InitStruct);
+	return HL_OK;
 }
 
 
@@ -228,13 +191,15 @@ err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void PIN_SetOutVal(uint8_t pinIndex, bool val){
-  if (0 == val){
-    GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
-  }
-  else{
-    GPIO_SetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
-  }
+void PIN_OutVal(uint8_t pinIndex, bool val){
+  if (pinIndex < _numPin){
+		if (0 == val){
+			GPIO_ResetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
+		}
+		else{
+			GPIO_SetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
+		}
+	}
 }
 
 
@@ -246,8 +211,10 @@ void PIN_SetOutVal(uint8_t pinIndex, bool val){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void PIN_SetOutOne(uint8_t pinIndex){
-  GPIO_SetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
+void PIN_OutOne(uint8_t pinIndex){
+	if (pinIndex < _numPin){
+		GPIO_SetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
+	}
 }
 
 
@@ -258,8 +225,10 @@ void PIN_SetOutOne(uint8_t pinIndex){
   @attention The actual value on the pin is also depend on pinMode, pull-up/pull-down resistor.
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
-void PIN_SetOutZero(uint8_t pinIndex){
-  GPIO_ResetBits(pinMap[pinIndex].port, pinMap[pinIndex].pin);
+void PIN_OutZero(uint8_t pinIndex){
+	if (pinIndex < _numPin){
+    GPIO_ResetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
+	}
 }
 
 
@@ -271,7 +240,23 @@ void PIN_SetOutZero(uint8_t pinIndex){
   @retval false pin is 0
 */
 bool PIN_GetInput(uint8_t pinIndex){
-  return GPIO_ReadInputDataBit(pinMap[pinIndex].port, pinMap[pinIndex].pin);
+  if (pinIndex < _numPin){
+    return GPIO_ReadInputDataBit(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
+	}
+	else{
+		return false;
+	}
 }
+
+
+/**
+ @brief Get number of pins in the platform
+ @return Number of pins
+*/
+uint8_t PIN_NumPin(void){
+	return _numPin;
+}
+
+} /* namespace */
 
 /** @}*/

@@ -1,3 +1,7 @@
+namespace HLib{
+
+
+
 //Not support dual/tripble mode
 typedef void (*ISR_ADCCallback)(uint16_t); 
 typedef enum {
@@ -30,6 +34,12 @@ ADC_TRIG_SOURCE_T8_CC1  = ((uint32_t)0x00060000) ,
 ADC_TRIG_SOURCE_T8_TRGO  = ((uint32_t)0x00080000) 
 } adc_trig_source_t;
 
+/**
+ @class adc_c
+ @brief Providing controlling method for ADC peripheral of a STM32
+ @attention
+*/
+
 class adc_c{
 private:
   uint8_t      adcNum;
@@ -57,3 +67,4 @@ public:
   void      ClearFlag(uint16_t flag);
 };
 
+} /* namespace */

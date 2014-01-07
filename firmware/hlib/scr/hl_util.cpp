@@ -18,6 +18,7 @@
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
 #include "hlib.h"
+namespace HLib{
 
 //  Volatile variables  ////////////////////////
 volatile  uint32_t loopDelayCounter;
@@ -34,7 +35,7 @@ volatile  uint32_t loopDelayCounter;
  @return None
  @attention Real delay time depends on speed of used MCU.
 */
-void HL_LoopDelay(uint32_t numLoop){
+void LoopDelay(uint32_t numLoop){
   for (loopDelayCounter=0; loopDelayCounter<numLoop; loopDelayCounter++){
     /* TRICK: use volatile loopDelayCounter to prevent Compiler Optimization */
   }
@@ -48,7 +49,7 @@ void HL_LoopDelay(uint32_t numLoop){
  @param outStr Converting result
  @return None
 */
-void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]){
+void NumToStr(uint32_t num, uint8_t radix, char outStr[]){
   uint32_t quotient, remainder;
   char     storageStr[33];
   int      count, index; //must int type, uint is incorrect
@@ -70,5 +71,21 @@ void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]){
   }
   outStr[index] = '\0';
 }
+
+
+/**
+ @brief Stop all the program. Blink LED[0] to indicate un-processed event happen. Onely reset can exit
+        this function
+ @return None
+*/ 
+void Halt(){
+  /* add disable Interrupt here */
+	while (1){
+     LoopDelay(1000);
+		 LED_Toggle(0);
+	}
+}
+
+} /* namespace */
 
 /** @} */

@@ -21,12 +21,18 @@
 #ifndef __HL_LED_H
 #define __HL_LED_H
 
-void  LED_Start(void);
-void  LED_Set(uint8_t ledIndex, bool val);
+namespace HLib{
 
-void  LED_On(uint8_t ledIndex);
-void  LED_Off(uint8_t ledIndex);
-void  LED_Toggle(uint8_t ledIndex);
+/********************************************************/
+void   LED_Start(void);
+err_t  LED_Set(uint8_t ledIndex, bool val);
 
+err_t  LED_On(uint8_t ledIndex);
+err_t  LED_OnAll();
+err_t  LED_Off(uint8_t ledIndex);
+err_t  LED_OffAll();
+err_t  LED_Toggle(uint8_t ledIndex);
+err_t  LED_ToggleAll();
 
+} /* namespace */
 #endif /* __HL_LED_H */

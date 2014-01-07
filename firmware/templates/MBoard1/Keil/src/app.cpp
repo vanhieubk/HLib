@@ -18,75 +18,24 @@
  */
 
 #include "hlib.h"
-#include "tlc5971_c.h"
+uint32_t   counter;
 
-
-#include "CoOS.h"
-
-
-#define COS_DEFAULT_QUEUE_SIZE 	16
-#define COS_DEFAULT_TASK_STACK  128
-// Globol variables  ////
-void*       sendQueue[COS_DEFAULT_QUEUE_SIZE];
-volatile 	OS_EventID  sendQueueId;
-volatile 	OS_TCID     periodicTimerId;
-							OS_STK      TSK_MainStk[COS_DEFAULT_TASK_STACK];  
-
-// CooCox RTOS task implementation  ////
-void TSK_Main (void* pdata);
-void TSK_Main (void* pdata){
-}
-uint32_t counter;
-spi_base_c spi1(1);
-tlc5971_c TLC5971(&spi1);
-
+HLib::uart_c COM1;
 void Setup(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	/* Enable SPI and GPIO clocks */
-	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA , ENABLE);
-
-/* Configure SPI pins: SCK, MISO and MOSI */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-  
+	HLib::PIN_SetMode(15, HLib::ALT_FUNC, HLib::PUSH_PULL_OUTPUT);
+	HLib::PIN_SetMode(16, HLib::ALT_FUNC, HLib::PULL_UP_INPUT);
+	COM1.Start(1, 115200);
+  COM1.Print("WELCOME TO HLib\n");
   counter = 0;
-  /* ADD CODE HERE TO INITIALIZE YOUR PROGRAM */
-  spi1.Start(SPI_PRESCALER_64, false, false);
-  TLC5971.Send();
-  HL_LoopDelay(1000000);
-  TLC5971.Send();
-  HL_LoopDelay(1000000);
-	
-	//CoInitOS();                
-  /* Create task */ 
-  //CoCreateTask(TSK_Main, 0, 0, &TSK_MainStk[COS_DEFAULT_TASK_STACK-1], COS_DEFAULT_TASK_STACK); 
-  /* Start multitask scheduling*/     
-  //CoStartOS(); 
 }
 
    
 ///////////////////////////////////////////////////////////////
 void Loop(void){
-  uint8_t  getChar;
-  uint8_t  fc;
-  
-  fc = TLC5971.CreateFc(true, false, false, true, false);
-  TLC5971.SetFc(fc);
-  TLC5971.Send();
-  //HL_LoopDelay(1000000);
-if (COM1.HasData()){
-    getChar = COM1.Get();
-  }
-  if (0 == (0x1FFFFF & counter++)){
-    LED_Toggle(0);
-    LED_Toggle(1);
-    COM1.Print("Bui Van Hieu\n");
-
-  }
+	uint8_t recvData;
+  if (COM1.HasData()){
+		COM1.Get(&recvData);
+		COM1.Out(recvData);
+	}
   /* ADD CODE HERE TO IMPLEMENT YOUR INFINITIVE LOOP  */
-
-
 }

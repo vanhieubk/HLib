@@ -22,6 +22,8 @@
 #define __HL_DEF_H
 
 #include <stddef.h>
+namespace HLib{
+
 /** \addtogroup HLibGlobalDef HLib's global data structure
  @{
 */
@@ -31,20 +33,13 @@
  @brief Return value of an HLib's function
 */
 typedef enum {
-  HL_OK = 0,        /**< Function works well */
-  HL_NOT_START = 1, /**< Peripherals have not been started before the function is called */
-  HL_INVALID = 2,   /**< One or some function's parameters is not valid */
-  HL_UNSUPPORT = 3, /**< Function is call with unsupported parameter */
-  HL_UNKNOW = 4     /**< Function enters some errors with unknow reasons */
+  HL_OK 				= 0,        /**< Function works well */
+  HL_NOT_START 	= 1, /**< Peripherals have not been started before the function is called */
+  HL_INVALID 		= 2,   /**< One or some function's parameters is not valid */
+  HL_UNSUPPORT 	= 3, /**< Function is call with unsupported parameter */
+  HL_UNKNOW 		= 4     /**< Function enters some errors with unknow reasons */
 } err_t;
 
-/**
- @brief Data structure represent port and pin of a STM32 physical pin
-*/
-typedef struct {
-  GPIO_TypeDef* port; /**< Port of a I/O pin */
-  uint16_t pin;       /**< Pin number of a I/O pin */
-} port_pin_t;
-
+} /* namespace */
 /** @} */
 #endif /* __HL_DEF_H */

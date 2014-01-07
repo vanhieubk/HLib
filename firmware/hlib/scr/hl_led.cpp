@@ -21,13 +21,16 @@
 */
 
 #include "hlib.h"
+namespace HLib{
 
+
+//////////////////////////////////////////////////
 #ifdef PLATFORM_STM32F100_STARTER
   #define NUM_OF_LEDS 2
-  const port_pin_t ledsMap[NUM_OF_LEDS] = { {GPIOA, GPIO_Pin_11}, {GPIOA, GPIO_Pin_12} };
+  const pin_t ledsMap[NUM_OF_LEDS] = { {CLK_GPIOA, GPIOA, GPIO_Pin_11},  {CLK_GPIOA, GPIOA, GPIO_Pin_12} };
 #elif defined (PLATFORM_MBOARD_ONE)
   #define NUM_OF_LEDS 1  
-  const port_pin_t ledsMap[NUM_OF_LEDS] = { {GPIOC, GPIO_Pin_4 } };
+  const pin_t ledsMap[NUM_OF_LEDS] = { {CLK_GPIOC, GPIOC, GPIO_Pin_4 } };
 #else
   #error "Unsupported platform"
 #endif
@@ -46,25 +49,13 @@ void LED_Start(void){
   GPIO_InitTypeDef  GPIO_InitStruct;
 
   for(ledCount=0; ledCount < NUM_OF_LEDS; ledCount++){
-    #ifdef PLATFORM_STM32F100_STARTER
-      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-      GPIO_InitStruct.GPIO_Pin   = ledsMap[ledCount].pin;
-      GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_Out_PP;
-      GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-      GPIO_Init(ledsMap[ledCount].port, &GPIO_InitStruct);
-      GPIO_SetBits(ledsMap[ledCount].port, ledsMap[ledCount].pin);
-      ledsState[ledCount] = 1;
-	#elif defined (PLATFORM_MBOARD_ONE)
-	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-      GPIO_InitStruct.GPIO_Pin   = ledsMap[ledCount].pin;
-      GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_Out_PP;
-      GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-      GPIO_Init(ledsMap[ledCount].port, &GPIO_InitStruct);
-      GPIO_SetBits(ledsMap[ledCount].port, ledsMap[ledCount].pin);
-      ledsState[ledCount] = 1;
-    #else
-      #error "Unsupported platform"
-    #endif
+		CLK_Ctrl(ledsMap[ledCount].clk, true);
+		GPIO_InitStruct.GPIO_Pin   = ledsMap[ledCount].pin;
+		GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_Out_PP;
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_Init(ledsMap[ledCount].port, &GPIO_InitStruct);
+		GPIO_SetBits(ledsMap[ledCount].port, ledsMap[ledCount].pin);
+		ledsState[ledCount] = 1;
   }
 }
 
@@ -74,9 +65,10 @@ void LED_Start(void){
  @brief Set state of an LED
  @param ledIndex Index or the LED
  @param val TRUE turn on the LED, FALSE turn off the LED
- @return None
+ @retval HL_INVALID the ledIndex parameter is out of range
+ @retval HL_OK function is finished correctly
 */
-void LED_Set(uint8_t ledIndex, bool val){
+err_t LED_Set(uint8_t ledIndex, bool val){
   if (ledIndex < NUM_OF_LEDS){
     if (false == val){
       GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
@@ -86,7 +78,11 @@ void LED_Set(uint8_t ledIndex, bool val){
       GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
       ledsState[ledIndex] = 1;
     }
+		return HL_OK;
   }
+	else{
+		return HL_INVALID;
+	}
 }
 
 
@@ -94,13 +90,32 @@ void LED_Set(uint8_t ledIndex, bool val){
 /**
  @brief Turn on an LED
  @param ledIndex Index or the LED
- @return None
+ @retval HL_INVALID the ledIndex parameter is out of range
+ @retval HL_OK function is finished correctly
 */
-void LED_On(uint8_t ledIndex){
+err_t LED_On(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
     ledsState[ledIndex] = 1;
+		return HL_OK;
   }
+	else{
+		return HL_INVALID;
+	}
+}
+
+
+
+/**
+ @brief Turn on all LEDs
+ @retval HL_OK function is finished correctly
+*/
+err_t LED_OnAll(){
+  for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
+    GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
+    ledsState[ledIndex] = 1;
+  }
+	return HL_OK;
 }
 
 
@@ -108,13 +123,32 @@ void LED_On(uint8_t ledIndex){
 /**
  @brief Turn off an LED
  @param ledIndex Index or the LED
- @return None
+ @retval HL_INVALID the ledIndex parameter is out of range
+ @retval HL_OK function is finished correctly
 */
-void LED_Off(uint8_t ledIndex){
+err_t LED_Off(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
     ledsState[ledIndex] = 0;
+		return HL_OK;
   }
+	else{
+		return HL_INVALID;
+	}
+}
+
+
+
+/**
+ @brief Turn off all LEDs
+ @retval HL_OK function is finished correctly
+*/
+err_t LED_OffAll(){
+  for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
+    GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
+    ledsState[ledIndex] = 1;
+  }
+	return HL_OK;
 }
 
 
@@ -122,9 +156,10 @@ void LED_Off(uint8_t ledIndex){
 /**
  @brief Toggle state of an LED
  @param ledIndex Index or the LED
- @return None
+ @retval HL_INVALID the ledIndex parameter is out of range
+ @retval HL_OK function is finished correctly
 */
-void LED_Toggle(uint8_t ledIndex){
+err_t LED_Toggle(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     if (1 == ledsState[ledIndex]){
       GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
@@ -134,5 +169,33 @@ void LED_Toggle(uint8_t ledIndex){
       GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
       ledsState[ledIndex] = 1;
     }
+		return HL_OK;
   }
+	else{
+		return HL_INVALID;
+	}
 }
+
+
+
+/**
+ @brief Toggle all LEDs
+ @retval HL_OK function is finished correctly
+*/
+err_t LED_ToggleAll(){
+  for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
+		if (1 == ledsState[ledIndex]){
+			GPIO_ResetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
+			ledsState[ledIndex] = 0;
+		}
+		else{
+			GPIO_SetBits(ledsMap[ledIndex].port, ledsMap[ledIndex].pin);
+			ledsState[ledIndex] = 1;
+		}
+  }
+  return HL_OK;
+}
+
+
+} /* namespace */
+
