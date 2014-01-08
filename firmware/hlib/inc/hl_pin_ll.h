@@ -1,7 +1,8 @@
 #ifndef __HL_PIN_LL
 #define __HL_PIN_LL
 
-namespace HLIb_LL {
+
+namespace HLib_LL {
 
 /**
  @brief Low-level PINs class.

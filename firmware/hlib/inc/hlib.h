@@ -50,6 +50,7 @@
 #include "hl_spi_base.h"
 #include "hl_adc.h"
 #include "hl_crc.h"
+#include "hl_pin_ll.h"
 
 /** \addtogroup HLibGlobalVar HLib's global variables
  @{
