@@ -257,6 +257,16 @@ uint8_t PIN_NumPin(void){
 	return _numPin;
 }
 
+
+
+/**
+ @brief Get address of table which map pinIndex to real pin
+ @return Pointer to the current used pinMap
+*/
+pin_t*    PIN_GetPinMap(void){
+  return &(_pinMap[0]);
+}
+
 } /* namespace */
 
 /** @}*/

@@ -82,7 +82,8 @@ void  		PIN_OutVal(uint8_t pinIndex, bool val);
 void  		PIN_OutOne(uint8_t pinIndex);
 void  		PIN_OutZero(uint8_t pinIndex);
 bool  		PIN_GetInput(uint8_t pinIndex);
-uint8_t   PIN_NumPin(void);
+uint8_t   PIN_GetNumPin(void);
+pin_t*    PIN_GetPinMap(void);
 
 } /* namespace */
 #endif /* __HL_PIN_H */
