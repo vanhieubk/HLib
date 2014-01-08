@@ -151,23 +151,23 @@ err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   
 	if (GPIO == mode){
 		switch (type){
-			case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-			case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-			case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-			case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
-			case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
+			case IN_FLOATING:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+			case IN_PULL_UP:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+			case IN_PULL_DOWN:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+			case OUT_PUSH_PULL:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
+			case OUT_OPEN_DRAIN: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
 			default: return HL_INVALID;
 		}
 	}
-	else if (ALT_FUNC ==mode){
+	else if (PERIPHERAL ==mode){
 		switch (type){
-			case ANALOG_INPUT:
-			case ANALOG_OUTPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
-			case FLOATING_INPUT:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-			case PULL_UP_INPUT:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-			case PULL_DOWN_INPUT:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-			case PUSH_PULL_OUTPUT:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
-			case OPEN_DRAIN_OUTPUT: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
+			case IN_ANALOG:
+			case OUT_ANALOG:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
+			case IN_FLOATING:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
+			case IN_PULL_UP:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
+			case IN_PULL_DOWN:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
+			case OUT_PUSH_PULL:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
+			case OUT_OPEN_DRAIN: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
 			default: return HL_INVALID;
 		}	
 	}

@@ -34,10 +34,12 @@ typedef struct {
 
 /**
  @brief Available mode of PINs in an MBoard
+ @attention Platforms which use STM32F10x MCU such as STM32F100_STARTER, MBoard1
+ are only support GPIO and PERIPHERAL modes. The others are reserved for the future
 */
 typedef enum{
   GPIO, 		  /**< Pin is connected with the general purpose input/output, used for getting 0/1 input or controlling 0/1 output */
-	ALT_FUNC,   /**< Pin is connected with an unspecified peripheral*/
+	PERIPHERAL,   /**< Pin is connected with an unspecified peripheral*/
   ADC1_CH_0, 	/**< Pin is connected with channel 0 of ADC0*/ 
   ADC1_CH_1, 	/**< Pin is connected with channel 1 of ADC0*/
   ADC1_CH_2, 	/**< Pin is connected with channel 2 of ADC0*/
@@ -63,15 +65,15 @@ typedef enum{
  @brief Electrical type of PINs in an MBoard
 */
 typedef enum {
-  ANALOG_INPUT, 	  /**< An analog input, used for ADC mode */
-  FLOATING_INPUT,   /**< An floating input */
-  PULL_UP_INPUT, 		/**< An input with pull-up resistor */
-  PULL_DOWN_INPUT,  /**< An input with pull-down resistor */
-  ANALOG_OUTPUT,    /**< An analog output, used for DAC mode */
-  PUSH_PULL_OUTPUT, /**< An push-pull output */
-  OPEN_DRAIN_OUTPUT /**< An open drain output */
+  IN_ANALOG, 	   /**< An analog input, used for ADC mode */
+  IN_FLOATING,   /**< An floating input */
+  IN_PULL_UP, 	 /**< An input with pull-up resistor */
+  IN_PULL_DOWN,  /**< An input with pull-down resistor */
+  OUT_ANALOG,    /**< An analog output, used for DAC mode */
+  OUT_PUSH_PULL, /**< An push-pull output */
+  OUT_OPEN_DRAIN /**< An open drain output */
 } pin_type_t;
-
+                 
 
 /////////////////////////////////////
 void  		PIN_Start(void);
