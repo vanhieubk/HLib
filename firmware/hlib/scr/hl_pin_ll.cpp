@@ -1,11 +1,9 @@
 #include "hlib.h"
-//#include "hl_pin_ll.h"
-
 
 
 namespace HLib_LL{
 
-pin_ll_c::pin_ll_c(HLib::clk_periph_t clk, GPIO_Typedef* port, uint16_t pin){
+pin_ll_c::pin_ll_c(HLib::clk_periph_t clk, GPIO_TypeDef* port, uint8_t pin){
   this->clk  = clk;
   this->port = port;
   this->pin   = pin;

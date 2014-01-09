@@ -22,44 +22,37 @@
  - The library does not support remap feature for the STM32F100 STARTER KIT.
 */
 #include "hlib.h"
+
+
 namespace HLib{
 
 
 ////   STATIC VARIABLEs   ///////////////////////////////////////////////
 #ifdef PLATFORM_STM32F100_STARTER
   #define NUM_OF_PIN 23
-  const pin_t  dfl_pinMap[NUM_OF_PIN] = 
-    { {CLK_GPIOA, GPIOA, GPIO_Pin_0},   {CLK_GPIOA, GPIOA, GPIO_Pin_1},  /* ADC0 - ADC1 */ 
-		  {CLK_GPIOA, GPIOA, GPIO_Pin_2},   {CLK_GPIOA, GPIOA, GPIO_Pin_3},  /* ADC2 - ADC3 */
-      {CLK_GPIOA, GPIOA, GPIO_Pin_4},   {CLK_GPIOA, GPIOA, GPIO_Pin_5},  /* NSS  - SCK */
-  		{CLK_GPIOA, GPIOA, GPIO_Pin_6},   {CLK_GPIOA, GPIOA, GPIO_Pin_7},  /* MISO - MOSI */
-		  {CLK_GPIOA, GPIOA, GPIO_Pin_8},   {CLK_GPIOB, GPIOB, GPIO_Pin_0},  /* RS   - RW  */
-  	  {CLK_GPIOB, GPIOB, GPIO_Pin_1},   {CLK_GPIOB, GPIOB, GPIO_Pin_12}, /* EN   - D4 */
-  	  {CLK_GPIOB, GPIOB, GPIO_Pin_13},  {CLK_GPIOB, GPIOB, GPIO_Pin_14}, /* D5   - D6 */
-	    {CLK_GPIOB, GPIOB, GPIO_Pin_15},  {CLK_GPIOA, GPIOA, GPIO_Pin_9},  /* D7   - TXD */
-  	  {CLK_GPIOA, GPIOA, GPIO_Pin_10},  {CLK_GPIOB, GPIOB, GPIO_Pin_6},  /* RXD  - SCL*/
-   		{CLK_GPIOB, GPIOB, GPIO_Pin_7},   {CLK_GPIOB, GPIOB, GPIO_Pin_8},  /* SDA  - PB8*/
-  		{CLK_GPIOB, GPIOB, GPIO_Pin_9},	  {CLK_GPIOB, GPIOB, GPIO_Pin_10}, /* PB9  - PB10*/
-  		{CLK_GPIOB, GPIOB, GPIO_Pin_11}																		 /* PB11       */	
+   const HLib_LL::pin_ll_c  dfl_pinMap[NUM_OF_PIN]= 
+    { HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 0),   HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 1),  /* ADC0 - ADC1 */ 
+		  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 2),   HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 3),  /* ADC2 - ADC3 */
+      HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 4),   HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 5),  /* NSS  - SCK */
+  		HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 6),   HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 7),  /* MISO - MOSI */
+		  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 8),   HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 0),  /* RS   - RW  */
+  	  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 1),   HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 12), /* EN   - D4 */
+  	  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 13),  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 14), /* D5   - D6 */
+	    HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 15),  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 9),  /* D7   - TXD */
+  	  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 10),  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 6),  /* RXD  - SCL*/
+   		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 7),   HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 8),  /* SDA  - PB8*/
+  		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 9),	 HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 10), /* PB9  - PB10*/
+  		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 11)													 /* PB11       */	
     };
 		
 #elif defined (PLATFORM_MBOARD_ONE)
-  #define NUM_OF_PIN 140
-  pin_t _pinMap[NUM_OF_PIN] = 
-    { {GPIOA, GPIO_Pin_0},  {GPIOA, GPIO_Pin_1},
-  		{GPIOA, GPIO_Pin_2},  {GPIOA, GPIO_Pin_3},
-      {GPIOA, GPIO_Pin_4},  {GPIOA, GPIO_Pin_5},
-  		{GPIOA, GPIO_Pin_6},  {GPIOA, GPIO_Pin_7},
-      {GPIOB, GPIO_Pin_6},  {GPIOB, GPIO_Pin_7},
-      {GPIOB, GPIO_Pin_8},  {GPIOB, GPIO_Pin_9},
-  		{GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_11},
-    };
+  #error "Not defined PIN yet"
 #else
   #error "Unsupported platform"
 #endif
 
-static uint8_t _numPin = NUM_OF_PIN;
-static pin_t*  _pinMap = (HLib::pin_t *) dfl_pinMap;
+static uint8_t              _numPin = NUM_OF_PIN;
+static HLib_LL::pin_ll_c*   _pinMap = (HLib_LL::pin_ll_c *) dfl_pinMap;
 ///////////////////////////////////////////////////
 /** \addtogroup  PIN_Group Setting and controlling PINs 
  @{
@@ -72,7 +65,7 @@ static pin_t*  _pinMap = (HLib::pin_t *) dfl_pinMap;
 */
 void PIN_Start(void){
   _numPin = NUM_OF_PIN;
-  _pinMap = (HLib::pin_t *) dfl_pinMap;
+  _pinMap = (HLib_LL::pin_ll_c *) dfl_pinMap;
 }
 
 
@@ -83,7 +76,7 @@ void PIN_Start(void){
  @return None
  @attention pinMap have to be available for later referencing
 */
-void  PIN_Start(uint8_t numPin, pin_t pinMap[]){
+void  PIN_Start(uint8_t numPin, HLib_LL::pin_ll_c pinMap[]){
 	_numPin = numPin;
 	_pinMap = pinMap;
 }
@@ -96,13 +89,7 @@ void  PIN_Start(uint8_t numPin, pin_t pinMap[]){
   @return None
 */
 void PIN_Release(uint8_t pinIndex){
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  
-	if (pinIndex < _numPin){
-    GPIO_InitStruct.GPIO_Pin  = _pinMap[pinIndex].pin;
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init(_pinMap[pinIndex].port, &GPIO_InitStruct);
-	}
+  _pinMap[pinIndex].Release();
 }
 
 
@@ -147,38 +134,7 @@ void PIN_Release(uint8_t pinIndex){
  ensure that no pin are used by different peripheral at the same time 
 */
 err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  
-	if (GPIO == mode){
-		switch (type){
-			case IN_FLOATING:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-			case IN_PULL_UP:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-			case IN_PULL_DOWN:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-			case OUT_PUSH_PULL:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; break;
-			case OUT_OPEN_DRAIN: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
-			default: return HL_INVALID;
-		}
-	}
-	else if (PERIPHERAL ==mode){
-		switch (type){
-			case IN_ANALOG:
-			case OUT_ANALOG:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN; break;
-			case IN_FLOATING:    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; break;
-			case IN_PULL_UP:     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; break;
-			case IN_PULL_DOWN:   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD; break;
-			case OUT_PUSH_PULL:  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; break;
-			case OUT_OPEN_DRAIN: GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_OD;
-			default: return HL_INVALID;
-		}	
-	}
-	else{
-		return HL_INVALID;
-	}
-	GPIO_InitStruct.GPIO_Pin   = _pinMap[pinIndex].pin;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-	CLK_Ctrl(_pinMap[pinIndex].clk, true);
-	GPIO_Init(_pinMap[pinIndex].port, &GPIO_InitStruct);
-	return HL_OK;
+	return _pinMap[pinIndex].SetMode(mode, type);
 }
 
 
@@ -192,14 +148,7 @@ err_t PIN_SetMode(uint8_t pinIndex, pin_mode_t mode, pin_type_t type){
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
 void PIN_OutVal(uint8_t pinIndex, bool val){
-  if (pinIndex < _numPin){
-		if (0 == val){
-			GPIO_ResetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
-		}
-		else{
-			GPIO_SetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
-		}
-	}
+	_pinMap[pinIndex].OutVal(val);
 }
 
 
@@ -212,9 +161,7 @@ void PIN_OutVal(uint8_t pinIndex, bool val){
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
 void PIN_OutOne(uint8_t pinIndex){
-	if (pinIndex < _numPin){
-		GPIO_SetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
-	}
+	_pinMap[pinIndex].OutOne();
 }
 
 
@@ -226,9 +173,7 @@ void PIN_OutOne(uint8_t pinIndex){
   Please ensure the pin is set as Output mode and pull-up/pull-down resistor is configured appropriately
 */
 void PIN_OutZero(uint8_t pinIndex){
-	if (pinIndex < _numPin){
-    GPIO_ResetBits(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
-	}
+  _pinMap[pinIndex].OutZero();
 }
 
 
@@ -240,12 +185,7 @@ void PIN_OutZero(uint8_t pinIndex){
   @retval false pin is 0
 */
 bool PIN_GetInput(uint8_t pinIndex){
-  if (pinIndex < _numPin){
-    return GPIO_ReadInputDataBit(_pinMap[pinIndex].port, _pinMap[pinIndex].pin);
-	}
-	else{
-		return false;
-	}
+  return _pinMap[pinIndex].GetInput();
 }
 
 
@@ -263,7 +203,7 @@ uint8_t PIN_NumPin(void){
  @brief Get address of table which map pinIndex to real pin
  @return Pointer to the current used pinMap
 */
-pin_t*    PIN_GetPinMap(void){
+HLib_LL::pin_ll_c*    PIN_GetPinMap(void){
   return &(_pinMap[0]);
 }
 

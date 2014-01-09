@@ -45,7 +45,7 @@ public:
   err_t   Shutdown(void);
   err_t   Print(char outChar);
   err_t   Print(char* outStr);
-  err_t   Print(uint32_t outNum, uint8_t radix);
+  err_t   Print(uint32_t outNum, uint8_t radix=10);
   err_t   Print(int32_t outNum);
           
   err_t   Out(uint8_t outNum);

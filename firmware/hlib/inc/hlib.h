@@ -44,13 +44,15 @@
 #include "hl_def.h"
 #include "hl_util.h"
 #include "hl_clk.h"
+#include "hl_pin_ll.h"
 #include "hl_pin.h"
 #include "hl_led.h"
 #include "hl_uart.h"
 #include "hl_spi_base.h"
 #include "hl_adc.h"
 #include "hl_crc.h"
-#include "hl_pin_ll.h"
+
+
 
 /** \addtogroup HLibGlobalVar HLib's global variables
  @{
