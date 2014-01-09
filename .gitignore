@@ -8,6 +8,17 @@
 *.slo
 *.lo
 *.o
+*.lst
+*.plg
+*.tra
+*.axf
+*.hex
+*.htm
+*.lnp
+*.map
+*.dep
+*.uvopt
+*.Administrator
 
 # Compiled Dynamic libraries
 *.so
