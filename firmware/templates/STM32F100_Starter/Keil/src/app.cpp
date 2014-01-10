@@ -42,8 +42,8 @@ void Loop(void){
     }
   }
   if (0 == (0x1FFFF & counter++)){
-    LEDS.Toggle(0);
-    LEDS.Toggle(1);
+    LED_Toggle(0);
+    LED_Toggle(1);
     COM1.Print("Bui Van Hieu\n");
   }
   /* ADD CODE HERE TO IMPLEMENT YOUR INFINITIVE LOOP  */
