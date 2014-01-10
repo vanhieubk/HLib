@@ -41,8 +41,8 @@ namespace HLib{
 	    HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 15),  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 9),  /* D7   - TXD */
   	  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 10),  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 6),  /* RXD  - SCL*/
    		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 7),   HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 8),  /* SDA  - PB8*/
-  		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 9),	 HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 10), /* PB9  - PB10*/
-  		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 11)													 /* PB11       */	
+  		HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 9),	  HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 10), /* PB9  - PB10 */
+      HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 11)										                         /* PB11 */	
     };
 		
 #elif defined (PLATFORM_MBOARD_ONE)

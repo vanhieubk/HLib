@@ -93,9 +93,9 @@ err_t spi_base_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEd
 
    /* enable SPI/I2S clock */
   switch (spiNum){
-    case 1: RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE); break;
-	  case 2: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE); break;
-	  case 3: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3, ENABLE); break;
+    case 1: CLK_Ctrl(CLK_SPI1, ENABLE); break;
+	  case 2: CLK_Ctrl(CLK_SPI2, ENABLE); break;
+	  case 3: CLK_Ctrl(CLK_SPI3, ENABLE); break;
   }
   
   /*config SPI/I2S */
@@ -150,9 +150,9 @@ err_t  spi_base_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondE
 void spi_base_c::Shutdown(){
   SPIx->CR1 &= CR1_SPE_Reset;
   switch (spiNum){
-    case 1:	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE); break;
-   	case 2:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, DISABLE);	break;
-	  case 3:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3, DISABLE);	break;
+    case 1:	CLK_Ctrl(CLK_SPI1, DISABLE); break;
+   	case 2:	CLK_Ctrl(CLK_SPI2, DISABLE); break;
+	  case 3:	CLK_Ctrl(CLK_SPI3, DISABLE); break;
   }
 }
 

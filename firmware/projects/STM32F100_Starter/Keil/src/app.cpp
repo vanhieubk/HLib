@@ -1,6 +1,7 @@
 #include "hlib.h"
 
 HLib::uart_c COM1;
+uint32_t counter;
 
 void Setup(void){
   HLib::PIN_SetMode(15, HLib::PERIPHERAL, HLib::OUT_PUSH_PULL);
@@ -9,14 +10,15 @@ void Setup(void){
   COM1.Print("*****************************\n");
   COM1.Print("** Welcome to HLib  **\n");
   COM1.Print("*****************************\n"); 
-  COM1.Print("This program sends received data back\n");
+  COM1.Print("This program sends periodic messages\n");
+  counter = 0;
 }
 
 
 void Loop(void){
-  uint8_t recvData;
-  if (COM1.HasData()){
-    COM1.Get(&recvData);
-    COM1.Out(recvData);
-  }
+  COM1.Print("Message (");
+  COM1.Print(counter);
+  COM1.Print(")\n");
+  counter ++;
+  HLib::LoopDelay(0xFFFFFF);
 }

@@ -27,7 +27,7 @@ namespace HLib{
  @attention This method have to be called to enable CRC block before other methods
 */
 void CRC_c::Start() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC,ENABLE);
+	CLK_Ctrl(CLK_CRC,ENABLE);
 	CRC->CR = CRC_CR_RESET;
 }
 
@@ -38,7 +38,7 @@ void CRC_c::Start() {
  @return None
 */
 void CRC_c::Shutdown() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, DISABLE);
+	CLK_Ctrl(CLK_CRC, DISABLE);
 }
 
 

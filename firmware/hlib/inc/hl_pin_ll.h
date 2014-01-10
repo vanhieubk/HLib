@@ -10,25 +10,7 @@ namespace HLib{
 */
 typedef enum{
   GPIO, 		  /**< Pin is connected with the general purpose input/output, used for getting 0/1 input or controlling 0/1 output */
-	PERIPHERAL,   /**< Pin is connected with an unspecified peripheral*/
-  ADC1_CH_0, 	/**< Pin is connected with channel 0 of ADC0*/ 
-  ADC1_CH_1, 	/**< Pin is connected with channel 1 of ADC0*/
-  ADC1_CH_2, 	/**< Pin is connected with channel 2 of ADC0*/
-  ADC1_CH_3, 	/**< Pin is connected with channel 3 of ADC0*/
-  TIM2_CH_1, 	/**< Pin is connected with channel 1 of TIM2*/
-  TIM2_CH_2, 	/**< Pin is connected with channel 2 of TIM2*/
-  TIM2_CH_3, 	/**< Pin is connected with channel 3 of TIM2*/
-  TIM2_CH_4, 	/**< Pin is connected with channel 4 of TIM2*/
-  UART2_TXD, 	/**< Pin is connected with TxD of UART2*/
-  UART2_RXD, 	/**< Pin is connected with RxD of UART2*/
-  SPI1_NSS, 	/**< Pin is connected with NSS of SPI1*/
-  SPI1_MISO, 	/**< Pin is connected with MISO of SPI1*/
-  SPI1_MOSI, 	/**< Pin is connected with MOSI of SPI1*/
-  SPI1_SCK, 	/**< Pin is connected with SCK of SPI1*/
-  DAC1_OUT_1, /**< Pin is connected with channel 1 of DAC1*/
-  DAC1_OUT_2, /**< Pin is connected with channel 2 of DAC1*/
-  I2C1_SCL, 	/**< Pin is connected with SCL of I2C1*/
-  I2C1_SDA 		/**< Pin is connected with SDA of I2C1*/
+	PERIPHERAL, /**< Pin is connected with an unspecified peripheral*/
 } pin_mode_t;
 
 
@@ -36,11 +18,11 @@ typedef enum{
  @brief Electrical type of PINs in an MBoard
 */
 typedef enum {
-  IN_ANALOG, 	   /**< An analog input, used for ADC mode */
+  IN_ANALOG, 	   /**< An analog input, used for ADC PERIPHERAL only */
   IN_FLOATING,   /**< An floating input */
   IN_PULL_UP, 	 /**< An input with pull-up resistor */
   IN_PULL_DOWN,  /**< An input with pull-down resistor */
-  OUT_ANALOG,    /**< An analog output, used for DAC mode */
+  OUT_ANALOG,    /**< An analog output, used for DAC PERIPHERAL only */
   OUT_PUSH_PULL, /**< An push-pull output */
   OUT_OPEN_DRAIN /**< An open drain output */
 } pin_type_t;
