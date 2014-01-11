@@ -19,6 +19,7 @@
 *.dep
 *.uvopt
 *.Administrator
+*.hieuvan
 
 # Compiled Dynamic libraries
 *.so
