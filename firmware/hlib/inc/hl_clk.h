@@ -13,7 +13,7 @@ typedef enum{
 	CLK_SPI2,   CLK_SPI3,   CLK_I2C1, 	CLK_I2C2,   CLK_ADC1,   CLK_ADC2,
 	CLK_ADC3,   CLK_DAC,    CLK_CAN1,   CLK_WWDG, 	CLK_SDIO,		CLK_BKP,
 	CLK_PWR, 		CLK_CEC,    CLK_CRC,    CLK_DMA1,   CLK_DMA2,   CLK_FLITF,
-  CLK_SRAM,   CLK_FSMC,   CLK_AFIO,
+  CLK_SRAM,   CLK_FSMC,   CLK_AFIO,   CLK_RTC,
 	CLK_USB_DEV, 
 	CLK_USB_OTG, 
 	CLK_ETH_MAC, 
@@ -21,7 +21,20 @@ typedef enum{
 	CLK_ETH_RX 
 } clk_periph_t;
 	
-err_t CLK_Ctrl(clk_periph_t peripheralClk, bool isEnable);
+
+/********************************/
+err_t     CLK_Ctrl(clk_periph_t peripheralClk, bool isEnable);
+uint32_t  CLK_GetSysFreq(void);
+uint32_t  CLK_GetAHBFreq(void);
+uint32_t  CLK_GetAPB1Freq(void);
+uint32_t  CLK_GetAPB2Freq(void);
+
+uint16_t  CLK_GetAHBPrescalar(void);
+err_t     CLK_SetAHBPrescalar(uint16_t prescalar);
+uint8_t   CLK_GetAPB1Prescalar(void);
+err_t     CLK_SetAPB1Prescalar(uint8_t prescalar);
+uint8_t   CLK_GetAPB2Prescalar(void);
+err_t     CLK_SetAPB2Prescalar(uint8_t prescalar);
 
 } /* namespace */
 
