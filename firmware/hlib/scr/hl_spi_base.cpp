@@ -52,12 +52,11 @@ namespace HLib{
 
 ////////////////////////////////////////////////////////////
 /**
- @brief Construction function
- @param spiNum SPI/I2S will be used.   
+ @brief Construction function  
  @return None
 */
 spi_base_c::spi_base_c(){
-  SPIx = NULL;
+  SPIx       = NULL;
   spiStarted = false;
 }
 
@@ -65,18 +64,19 @@ spi_base_c::spi_base_c(){
 
  /**
  @brief Start SPI peripheral.
- @param prescaler Baudrate prescaler of SPI.
- @param idleLevel TRUE : data line is kept at high level in idle state.\n FALSE : data line is kept at low level in idle state.
+ @brief spiNum Number of the SPI used
+ @param prescaler Baudrate prescaler of SPI. Valid values are ....
+ @param idleHigh TRUE : data line is kept at high level in idle state.\n FALSE : data line is kept at low level in idle state.
  @param secondEdge TRUE: data is latched at the second edge.\n FALSE: data is latched at the first edge
- @param firstBitMSB TRUE: first bit is the MSB.\n FALSE: first bit is the LSB
+ @param firstMSB TRUE: first bit is the MSB.\n FALSE: first bit is the LSB
  @param direction Communication direction of the SPI
  @param crcEnable TRUE: hardware CRC calculator is used.\n FALSE: hardware CRC calculator is not used
  @param crcPoly: CRC polynomial 
  @retval HL_INVALID one or some parameters is invalid. The method is cancel
- @retval HL_OK The method is performed OK
+ @retval HL_OK The used SPI is started OK
 */
 err_t spi_base_c::Start(spi_direction_t direction, uint8_t spiNum,  uint16_t prescaler, bool idleLevel, bool secondEdge, 
-bool firstBitMSB,  bool crcEnable, uint16_t crcPoly){
+bool firstMSB,  bool crcEnable, uint16_t crcPoly){
   SPI_InitTypeDef   SPI_InitStruct;
   spi_prescaler_t   setPrescaler;
   
@@ -105,9 +105,9 @@ bool firstBitMSB,  bool crcEnable, uint16_t crcPoly){
     default : SPIx = NULL; return HL_INVALID;
   }
   /*config SPI/I2S */
-  SPI_InitStruct.SPI_CPOL              = idleLevel ? SPI_CPOL_High    : SPI_CPOL_Low;
-  SPI_InitStruct.SPI_CPHA              = secondEdge    ? SPI_CPHA_2Edge   : SPI_CPHA_1Edge;
-  SPI_InitStruct.SPI_FirstBit          = firstBitMSB   ? SPI_FirstBit_MSB : SPI_FirstBit_LSB; 
+  SPI_InitStruct.SPI_CPOL              = idleLevel  ? SPI_CPOL_High    : SPI_CPOL_Low;
+  SPI_InitStruct.SPI_CPHA              = secondEdge ? SPI_CPHA_2Edge   : SPI_CPHA_1Edge;
+  SPI_InitStruct.SPI_FirstBit          = firstMSB   ? SPI_FirstBit_MSB : SPI_FirstBit_LSB; 
   SPI_InitStruct.SPI_CPHA              = SPI_CPHA_2Edge;
   SPI_InitStruct.SPI_NSS               = SPI_NSS_Soft;
   SPI_InitStruct.SPI_Mode              = SPI_Mode_Master;
@@ -126,23 +126,37 @@ bool firstBitMSB,  bool crcEnable, uint16_t crcPoly){
   }
   /*enable SPI*/
   SPIx->CR1 |= CR1_SPE_Set;     
-  spiStarted = true;
   
+  spiStarted = true;
   return HL_OK;
 }
 
 
 /**
  @brief Stop SPI/I2S and then disable its clock
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
 */
-void spi_base_c::Shutdown(){
+err_t spi_base_c::Shutdown(){
+  if (!spiStarted){return HL_NOT_START;}
+
   SPIx->CR1 &= CR1_SPE_Reset;
-  switch (spiNum){
-    case 1:	CLK_Ctrl(CLK_SPI1, DISABLE); break;
-   	case 2:	CLK_Ctrl(CLK_SPI2, DISABLE); break;
-	  case 3:	CLK_Ctrl(CLK_SPI3, DISABLE); break;
+  if (SPI1 == SPIx){
+    CLK_Ctrl(CLK_SPI1, DISABLE);
   }
+  else if (SPI2 == SPIx){
+    CLK_Ctrl(CLK_SPI2, DISABLE);
+  }
+  else if (SPI3 == SPIx){
+    CLK_Ctrl(CLK_SPI3, DISABLE);
+  }
+  else{
+    return HL_INVALID;
+  }
+
+  SPIx = NULL;
+  spiStarted = false;
+  return HL_OK;
 }
 
 
@@ -150,49 +164,17 @@ void spi_base_c::Shutdown(){
 /**
  @brief Wait until the output buffer empty and then send one byte
  @param sendData Data to send
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
 */
-void spi_base_c::Send(uint8_t sendData){ 
+err_t spi_base_c::Send(uint8_t sendData){
+  if (!spiStarted) {return HL_NOT_START;} 
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait, DO NOTHING */
   }  
   SPIx->DR = sendData;
+  return HL_OK;
 }
-
-
-
-/**
- @overload 
- @brief Send an array of data
- @param sendBuf Array of data to send
- @param bufLen Length of array of data
- @return None
-*/
-void spi_base_c::Send(uint8_t sendBuf[], uint16_t bufLen){
-  uint16_t index;
-  for (index=0; index<bufLen; index++){
-    Send(sendBuf[index]);
-  }  
-}
-
-
-/**
- @overload
- @brief Send one byte. Wait until data transmision completed and then return receiving data
- @param sendData Data to send
- @return Received data
-*/
-uint8_t spi_base_c::SendRecv(uint8_t sendData){
-	Send(sendData);
-  while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
-    /* wait data to send, DO NOTHING */
-  }
-  while (SPIx->SR & SPI_I2S_FLAG_BSY);{
-    /* wait data send completly, get last received data, DO NOTHING */
-  }
-  return (uint8_t) SPIx->DR;
-}
-
 
 
 /**
@@ -200,9 +182,11 @@ uint8_t spi_base_c::SendRecv(uint8_t sendData){
  @brief Send one byte. Wait until data transmision completed and then get receiving data
  @param sendData Data to send
  @param recvData Pointer to variable will hold receiving data
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
 */
-void spi_base_c::SendRecv(uint8_t sendData, uint8_t *recvData){ 
+err_t spi_base_c::Send(uint8_t sendData, uint8_t *recvData){ 
+  if (!spiStarted) {return HL_NOT_START;} 
   Send(sendData);
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait data to send, DO NOTHING */
@@ -211,33 +195,53 @@ void spi_base_c::SendRecv(uint8_t sendData, uint8_t *recvData){
     /* wait data send completly, get last received data, DO NOTHING */
   }
   *recvData = (uint8_t) SPIx->DR;
+  return HL_OK;
 }
 
+
+/**
+ @overload 
+ @brief Send an array of data
+ @param sendBuf Array of data to send
+ @param bufLen Length of array of data
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
+*/
+err_t spi_base_c::Send(uint8_t sendBuf[], uint16_t bufLen){
+  uint16_t index;
+  
+  if (!spiStarted) {return HL_NOT_START;} 
+  for (index=0; index<bufLen; index++){
+    Send(sendBuf[index]);
+  } 
+  return HL_OK;
+}
 
 
 /**
  @overload
- @brief Send and receive arrays of data
+ @brief Send and receive arrays of data without any stall in SCK
  @param sendBuf Array of data to send
  @param recvBuf Pointer to array of data will hold receiving data
  @param bufLen Length of send/receive array of data
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
+ @attention This function may lost some data if there are some long-time interupts happen.
+            In order to ensure data reliable, please use RecvSafe() which sends and receives byte by byte
 */
-void spi_base_c::SendRecv(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen){
+err_t spi_base_c::Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
   uint16_t index;
 
-  if (bufLen == 0) return;
+  if (!spiStarted) {return HL_NOT_START;}
+  if (bufLen == 0) {return HL_OK;}
   /* not reuse Send(), write new one to get more efficient */
   while (SPIx->SR & SPI_I2S_FLAG_BSY);{
     /* wait previous transmision completly, DO NOTHING */
   }
-
   /* clear RXNE flag */
   SPIx->SR &= ~(SPI_I2S_FLAG_RXNE);
-
   /* send first data */
   Send(sendBuf[0]);
-
   /* send remain data while get receiving data */
   for (index=1; index<bufLen; index++){
     Send(sendBuf[index]);
@@ -246,32 +250,60 @@ void spi_base_c::SendRecv(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen)
     }
     recvBuf[index-1] = SPIx->DR;
   }
-
   /* get last data */
   while (!(SPIx->SR & SPI_I2S_FLAG_RXNE)){
     /* wait the last recv data, DO NOTHING */
   }
   recvBuf[index-1] = SPIx->DR;
+  return HL_OK;
 }
 
+
+
+/**
+ @brief Send and receive arrays of data byte by byte
+ @param sendBuf Array of data to send
+ @param recvBuf Pointer to array of data will hold receiving data
+ @param bufLen Length of send/receive array of data
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
+*/
+err_t spi_base_c::RecvSafe(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
+  uint16_t index;
+
+  if (!spiStarted) {return HL_NOT_START;}
+  for (index=0; index<bufLen; index++){
+    Send(sendBuf[index], &(recvBuf[index]));
+  }
+  return HL_OK;
+}
 
 
 /**
  @brief Get current CRC polynomial
  @return Current CRC polynomial
 */
-uint16_t spi_base_c::GetCRCPoly(){ 
-  return SPIx->CRCPR;
+uint16_t spi_base_c::GetCRCPoly(){
+  if (NULL != SPIx){ 
+    return SPIx->CRCPR;
+  }
+  else{
+    return 0;
+  }
 }
 
 
 
 /**
  @brief Request sending hardware calculated CRC after current transmission completed
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
 */
-void spi_base_c::SendCRC(){ 
+err_t spi_base_c::SendCRC(){ 
+  if (!spiStarted) {return HL_NOT_START;}
+
   SPIx->CR1 |= CR1_CRCNext_Set;
+  return HL_OK;
 }      
 
 
@@ -281,7 +313,12 @@ void spi_base_c::SendCRC(){
  @return Sending CRC
 */
 uint16_t spi_base_c::GetSendCRC(){
-  return SPIx->TXCRCR;
+  if (NULL != SPIx){
+    return SPIx->TXCRCR;
+  }
+  else{
+    return 0;
+  }
 }
 
 
@@ -291,31 +328,45 @@ uint16_t spi_base_c::GetSendCRC(){
  @return Receiving CRC
 */
 uint16_t spi_base_c::GetRecvCRC(){
-  return SPIx->RXCRCR;
+  if (NULL != SPIx){
+    return SPIx->RXCRCR;
+  }
+  else{
+    return 0;
+  }
 }
 
 
 
 /**
  @brief Clear calculated CRC to prepare for new transmision
- @return None
+ @retval HL_NOT_START SPI is not started before calling this function
+ @retval HL_OK The function is finished successfully
  @attention Only use when SPI is not busy or data corruption may happen
 */
-void spi_base_c::ClearCRC(){
+err_t spi_base_c::ClearCRC(){
+  if (!spiStarted) {return HL_NOT_START;}
+  while (IsBusy()){
+    /* wait until SPI finish current operating */
+  }
   SPIx->CR1 &= CR1_SPE_Reset;   //Disable SPI
   SPIx->CR1 &= CR1_CRCEN_Reset; //Disable CRC
   SPIx->CR1 |= CR1_CRCEN_Set;   //Enable CRC
   SPIx->CR1 |= CR1_SPE_Set;     //Enable SPI
+  return HL_OK;
 } 
 
 
 
 /**
  @brief Check SPI busy status
- @return TRUE: SPI is busy. FALSE: SPI is not busy
+ @return TRUE: SPI is busy. FALSE: SPI is not busy or not started
 */
 bool spi_base_c::IsBusy(){
-  return (SPIx->SR & SPI_I2S_FLAG_BSY);
+  if (!spiStarted) return false;
+  else{
+    return (bool) (SPIx->SR & SPI_I2S_FLAG_BSY);
+  }
 } 
 
 

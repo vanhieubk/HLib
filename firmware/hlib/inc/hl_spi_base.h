@@ -45,7 +45,6 @@ typedef enum{
 
 class spi_base_c {
 private:
-  uint8_t    			spiNum;
   bool       			spiStarted;
   SPI_TypeDef *		SPIx;
 public: 
@@ -54,19 +53,17 @@ public:
   err_t     Start(spi_direction_t direction, uint8_t spiNum = 1, uint16_t prescaler = 32, bool idleHigh = true,
                   bool secondEdge = true, bool firstMSB = true, 
                   bool crcEnable = false, uint16_t crcPoly = 0x1021);
-  void      Shutdown();
-  void      Send(uint8_t sendData);
-  //err_t     Send(uint8_t sendData, uint8_t* recvData = NULL);
-  //err_t     Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]=NULL);
-  void      Send(uint8_t sendBuf[], uint16_t bufLen); 
-	uint8_t   SendRecv(uint8_t sendData);
-  void      SendRecv(uint8_t sendData, uint8_t *recvData);
-  void      SendRecv(uint8_t sendBuf[], uint8_t recvBuf[], uint16_t bufLen); 
+  err_t     Shutdown();
+  err_t     Send(uint8_t sendData);
+  err_t     Send(uint8_t sendData, uint8_t *recvData);
+  err_t     Send(uint8_t sendBuf[], uint16_t bufLen);
+  err_t     Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]); 
+  err_t     RecvSafe(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]);
   uint16_t  GetCRCPoly();
-  void      SendCRC();
+  err_t     SendCRC();
   uint16_t  GetSendCRC();
   uint16_t  GetRecvCRC();
-  void      ClearCRC();  
+  err_t     ClearCRC();  
   bool      IsBusy();               
 };
 
