@@ -3,8 +3,8 @@
  @brief Implementing basis communication methods for SPI in <b> HLib's MBoards  </b>
  
  @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
- @version 1.1
- @date 10-12-2013
+ @version 1.2
+ @date 11-1-2014
  
  @copyright
  This project and all its relevant hardware designs, documents, source codes, compiled libraries
@@ -56,20 +56,9 @@ namespace HLib{
  @param spiNum SPI/I2S will be used.   
  @return None
 */
-spi_base_c::spi_base_c(uint8_t spiNum){
-  switch (spiNum){
-    #if defined(STM32F100C8_MCU)
-      case 1:  this->spiNum = spiNum; SPIx = SPI1; break;
-    #elif defined(STM32F103RCT6_MCU)
-      case 1:  this->spiNum = spiNum; SPIx = SPI1; break;
-      case 2:  this->spiNum = spiNum; SPIx = SPI2; break;
-      case 3:  this->spiNum = spiNum; SPIx = SPI3; break;
-	#else
-      #error "Unsupported platform"
-    #endif
-   	  default: this->spiNum = 0; SPIx = NULL;  
-  } /* end switch */
-  spiStarted    = false;
+spi_base_c::spi_base_c(){
+  SPIx = NULL;
+  spiStarted = false;
 }
 
 
@@ -86,18 +75,35 @@ spi_base_c::spi_base_c(uint8_t spiNum){
  @retval HL_INVALID one or some parameters is invalid. The method is cancel
  @retval HL_OK The method is performed OK
 */
-err_t spi_base_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge, bool firstBitMSB, spi_direction_t direction, bool crcEnable, uint16_t crcPoly){
+err_t spi_base_c::Start(spi_direction_t direction, uint8_t spiNum,  uint16_t prescaler, bool idleLevel, bool secondEdge, 
+bool firstBitMSB,  bool crcEnable, uint16_t crcPoly){
   SPI_InitTypeDef   SPI_InitStruct;
+  spi_prescaler_t   setPrescaler;
   
-  _SPI_CONSTRUCT_CHECK();
-
-   /* enable SPI/I2S clock */
   switch (spiNum){
-    case 1: CLK_Ctrl(CLK_SPI1, ENABLE); break;
-	  case 2: CLK_Ctrl(CLK_SPI2, ENABLE); break;
-	  case 3: CLK_Ctrl(CLK_SPI3, ENABLE); break;
-  }
+    #if defined(STM32F100C8_MCU)
+      case 1:  SPIx = SPI1; CLK_Ctrl(CLK_SPI1, ENABLE);break;
+    #elif defined(STM32F103RCT6_MCU)
+      case 1:  SPIx = SPI1; CLK_Ctrl(CLK_SPI1, ENABLE);break;
+      case 2:  SPIx = SPI2; CLK_Ctrl(CLK_SPI2, ENABLE);break;
+      case 3:  SPIx = SPI3; CLK_Ctrl(CLK_SPI3, ENABLE);break;
+	  #else
+      #error "Unsupported MCU"
+    #endif
+   	  default: SPIx = NULL; spiStarted = false; return HL_INVALID; 
+  } /* end switch */
   
+  switch (prescaler){
+    case 2:   setPrescaler = SPI_PRESCALER_2;   break;
+    case 4:   setPrescaler = SPI_PRESCALER_4;   break;
+    case 8:   setPrescaler = SPI_PRESCALER_8;   break;
+    case 16:  setPrescaler = SPI_PRESCALER_16;  break;
+    case 32:  setPrescaler = SPI_PRESCALER_32;  break;
+    case 64:  setPrescaler = SPI_PRESCALER_64;  break;
+    case 128: setPrescaler = SPI_PRESCALER_128; break;
+    case 256: setPrescaler = SPI_PRESCALER_256; break;
+    default : SPIx = NULL; return HL_INVALID;
+  }
   /*config SPI/I2S */
   SPI_InitStruct.SPI_CPOL              = idleLevel ? SPI_CPOL_High    : SPI_CPOL_Low;
   SPI_InitStruct.SPI_CPHA              = secondEdge    ? SPI_CPHA_2Edge   : SPI_CPHA_1Edge;
@@ -108,39 +114,22 @@ err_t spi_base_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEd
   SPI_InitStruct.SPI_DataSize          = SPI_DataSize_8b;
   SPI_InitStruct.SPI_Direction         = direction;
   SPI_InitStruct.SPI_CRCPolynomial     = crcPoly;  
-  SPI_InitStruct.SPI_BaudRatePrescaler = prescaler; 
+  SPI_InitStruct.SPI_BaudRatePrescaler = setPrescaler; 
  
-  if (0 != spiNum){
-    SPIx->CR1 &= CR1_SPE_Reset; /* stop/disable */  
-    SPI_Init(SPIx, &SPI_InitStruct);
-    if (crcEnable){
-      SPIx->CR1 |= CR1_CRCEN_Set;
-    }
-    else{
-      SPIx->CR1 &= CR1_CRCEN_Reset;
-    }
-    /*enable SPI*/
-    SPIx->CR1 |= CR1_SPE_Set;     
-    spiStarted = true;
+  SPIx->CR1 &= CR1_SPE_Reset; /* stop/disable */  
+  SPI_Init(SPIx, &SPI_InitStruct);
+  if (crcEnable){
+    SPIx->CR1 |= CR1_CRCEN_Set;
   }
+  else{
+    SPIx->CR1 &= CR1_CRCEN_Reset;
+  }
+  /*enable SPI*/
+  SPIx->CR1 |= CR1_SPE_Set;     
+  spiStarted = true;
+  
   return HL_OK;
 }
-
-
-
-/**
- @overload
- @brief Start SPI peripheral. Operating mode is: firstBitMSB, SPI_2LINES_RX_TX, CRC disable
- @param prescaler Baudrate prescaler of SPI.
- @param idleLevel TRUE : data line is kept at high level in idle state.\n FALSE : data line is kept at low level in idle state.
- @param secondEdge TRUE: data is latched at the second edge.\n FALSE: data is latched at the first edge
- @retval HL_INVALID one or some parameters is invalid. The method is cancel
- @retval HL_OK The method is performed OK
-*/
-err_t  spi_base_c::Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge){
-  return Start(prescaler, idleLevel, secondEdge, true, SPI_2LINES_RX_TX, false, GetCRCPoly());
-}
-
 
 
 /**

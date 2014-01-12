@@ -70,6 +70,7 @@ err_t  uart_c::Start(uint8_t uartNum, uint32_t baudRate){
 	USART_InitStruct.USART_StopBits   = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_Cmd(UARTx, DISABLE);
 	USART_Init(UARTx, &USART_InitStruct);
 	
 	/*enable USART*/

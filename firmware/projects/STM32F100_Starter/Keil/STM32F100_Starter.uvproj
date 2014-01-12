@@ -437,11 +437,6 @@
           <GroupName>hlib</GroupName>
           <Files>
             <File>
-              <FileName>hl_adc.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\hlib\scr\hl_adc.cpp</FilePath>
-            </File>
-            <File>
               <FileName>hl_clk.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\hlib\scr\hl_clk.cpp</FilePath>

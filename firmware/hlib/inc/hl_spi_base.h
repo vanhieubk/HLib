@@ -49,12 +49,15 @@ private:
   bool       			spiStarted;
   SPI_TypeDef *		SPIx;
 public: 
-	spi_base_c(uint8_t uartNum);
+	spi_base_c();
 
-  err_t     Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge, bool firstBitMSB, spi_direction_t direction, bool crcEnable, uint16_t crcPoly);
-  err_t     Start(spi_prescaler_t prescaler, bool idleLevel, bool secondEdge);
+  err_t     Start(spi_direction_t direction, uint8_t spiNum = 1, uint16_t prescaler = 32, bool idleHigh = true,
+                  bool secondEdge = true, bool firstMSB = true, 
+                  bool crcEnable = false, uint16_t crcPoly = 0x1021);
   void      Shutdown();
   void      Send(uint8_t sendData);
+  //err_t     Send(uint8_t sendData, uint8_t* recvData = NULL);
+  //err_t     Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]=NULL);
   void      Send(uint8_t sendBuf[], uint16_t bufLen); 
 	uint8_t   SendRecv(uint8_t sendData);
   void      SendRecv(uint8_t sendData, uint8_t *recvData);
