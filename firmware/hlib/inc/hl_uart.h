@@ -23,18 +23,6 @@
 
 namespace HLib{
 	
-	
-/**
- @class uart_c
- @brief Providing controlling method for USART peripheral of STM32
- @attention
- - The USART1 is reserved for HLib as COM1. Please do not create an instance of this class with comPort=1
- - This library always enables receiving feature.
- - This library always uses 1-stop-bit mode
- - DMA transfer/receiver has not been supported\n.
- - Current version only supports polling receiving. Interrupt receiving will be implemented in next version
- - This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
-*/
 class uart_c {
 private:
   bool       uartStarted;

@@ -1,47 +1,44 @@
+/**
+ @file hl_adc_basis.h
+ @brief Declarating methods for ADCs 
+ 
+ @author Bui Van Hieu 
+ @version 1.0
+ @date 16-1-2014
+ 
+ @copyright
+ This project and all its relevant hardware designs, documents, source codes, compiled libraries
+ belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
+ You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
+ in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
+ SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
+ with respect to any claims arising from the content of hardware, firmware and/or the use 
+ made by customers of the coding information contained herein in connection with their products.\n
+ You are prohibited from commercializing in any kind that using or basing on these works
+ without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+*/
+
 #ifndef __HL_ADC_BASIS_H
 #define __HL_ADC_BASIS_H
 
 namespace HLib{
-
-typedef enum{
-  ADC_TRIG_SOURCE_Ext_IT11_TIM8_TRGO =  ((uint32_t)0x000C0000), 
-  ADC_TRIG_SOURCE_NONE    = ((uint32_t)0x000E0000) ,
-  ADC_TRIG_SOURCE_T1_CC1  = ((uint32_t)0x00000000), 
-  ADC_TRIG_SOURCE_T1_CC2  = ((uint32_t)0x00020000) ,
-  ADC_TRIG_SOURCE_T1_CC3  = ((uint32_t)0x00040000) ,
-  ADC_TRIG_SOURCE_T2_CC2  = ((uint32_t)0x00060000) ,
-  ADC_TRIG_SOURCE_T2_CC3  = ((uint32_t)0x00020000) ,
-  ADC_TRIG_SOURCE_T3_CC1  = ((uint32_t)0x00000000) ,
-  ADC_TRIG_SOURCE_T3_TRGO = ((uint32_t)0x00080000) ,
-  ADC_TRIG_SOURCE_T4_CC4  = ((uint32_t)0x000A0000) ,
-  ADC_TRIG_SOURCE_T5_CC1  = ((uint32_t)0x000A0000) ,
-  ADC_TRIG_SOURCE_T5_CC3  = ((uint32_t)0x000C0000) ,
-  ADC_TRIG_SOURCE_T8_CC1  = ((uint32_t)0x00060000) ,
-  ADC_TRIG_SOURCE_T8_TRGO = ((uint32_t)0x00080000) 
-} adc_trig_source_t;
-
-/**
- @class adc_c
- @brief Providing controlling method for ADC peripheral of a STM32
- @attention
-*/
 
 class adc_basis_c{
 private:
   bool         adcStarted;
   ADC_TypeDef* ADCx;
 public:
-  adc_basis_c     ();
+  adc_basis_c();
   err_t     Start(uint8_t adcNum, bool rightAlign=true);
   err_t     Shutdown();
   
   err_t     Calib();
+  err_t     SetChannel(uint8_t channel);
   err_t     Trigger();
+  bool      IsBusy();
+  uint16_t  GetAdc();
   err_t     Read(uint8_t channel, uint16_t* adcVal);
   err_t     Read(uint16_t* adcVal);
-  err_t     SetChannel(uint8_t channel);
-  uint16_t  GetAdc();
-  bool      IsBusy();
 };
 
 } /* namespace */

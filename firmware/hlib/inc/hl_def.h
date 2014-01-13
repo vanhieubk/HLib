@@ -33,11 +33,11 @@ namespace HLib{
  @brief Return value of an HLib's function
 */
 typedef enum {
-  HL_OK 				= 0,        /**< Function works well */
-  HL_NOT_START 	= 1, /**< Peripherals have not been started before the function is called */
-  HL_INVALID 		= 2,   /**< One or some function's parameters is not valid */
-  HL_UNSUPPORT 	= 3, /**< Function is call with unsupported parameter */
-  HL_UNKNOW 		= 4     /**< Function enters some errors with unknow reasons */
+  OK 				  = 0,  /**< Function works well */
+  NOT_START 	= 1,  /**< Peripherals have not been started before the function is called */
+  INVALID 		= 2,  /**< One or some function's parameters is not valid */
+  UNSUPPORT 	= 3,  /**< Function is call with unsupported parameter */
+  UNKNOW 		  = 4   /**< Function enters some errors with unknow reasons */
 } err_t;
 
 } /* namespace */

@@ -21,7 +21,7 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
 			case HLib::IN_PULL_DOWN:   configBits = 0x08; break;
 			case HLib::OUT_PUSH_PULL:  configBits = 0x03; break;
 			case HLib::OUT_OPEN_DRAIN: configBits = 0x07; break;
-			default: return HLib::HL_INVALID;
+			default: return HLib::INVALID;
 		}
 	}
 	else if (HLib::PERIPHERAL ==mode){
@@ -33,11 +33,11 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
 			case HLib::IN_PULL_DOWN:   configBits = 0x08; break;
 			case HLib::OUT_PUSH_PULL:  configBits = 0x0B; break;
 			case HLib::OUT_OPEN_DRAIN: configBits = 0x0F; break;
-			default: return HLib::HL_INVALID;
+			default: return HLib::INVALID;
 		}	
 	}
 	else{
-		return HLib::HL_INVALID;
+		return HLib::INVALID;
 	}
   /* update register */
   if (pin <8){
@@ -55,7 +55,7 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
     port->CRH   = reg;
   }
   else{
-    return HLib::HL_INVALID;
+    return HLib::INVALID;
   }
   /* config pullup/pulldown resistor */
   if (HLib::IN_PULL_UP == type){
@@ -64,7 +64,7 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
   else if (HLib::IN_PULL_DOWN == type){
     port->BRR = HL_BitMask(pin);
   }
-	return HLib::HL_OK;
+	return HLib::OK;
 }
 
 

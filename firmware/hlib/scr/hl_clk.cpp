@@ -119,9 +119,9 @@ err_t CLK_Ctrl(clk_periph_t peripheralClk, bool mode){
 		#ifdef STM32F103RCT6_MCU
 		case CLK_SDIO:    _CLK_AHBCtrl(RCC_AHBPeriph_SDIO, 			mode); break;
 		#endif
-	  default: return HL_INVALID;
+	  default: return INVALID;
   }
-	return HL_OK;
+	return OK;
 }
 
 
@@ -161,10 +161,10 @@ err_t CLK_SetAHBPrescalar(uint16_t prescalar){
     case 128: tmpReg |= (((uint32_t) 0x0D) << 4); break;
     case 256: tmpReg |= (((uint32_t) 0x0E) << 4); break;
     case 512: tmpReg |= (((uint32_t) 0x0F) << 4); break;
-    default: return HL_INVALID;  
+    default: return INVALID;  
   }
   RCC->CFGR = tmpReg;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -180,10 +180,10 @@ err_t     CLK_SetAPB1Prescalar(uint8_t prescalar){
     case 4:  tmpReg |= (((uint32_t) 0x05) << 8); break;
     case 8:  tmpReg |= (((uint32_t) 0x06) << 8); break;
     case 16: tmpReg |= (((uint32_t) 0x07) << 8); break;
-    default: return HL_INVALID;
+    default: return INVALID;
   } 
   RCC->CFGR = tmpReg;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -199,10 +199,10 @@ err_t CLK_SetAPB2Prescalar(uint8_t prescalar){
     case 4:  tmpReg |= (((uint32_t) 0x05) << 11); break;
     case 8:  tmpReg |= (((uint32_t) 0x06) << 11); break;
     case 16: tmpReg |= (((uint32_t) 0x07) << 11); break;
-    default: return HL_INVALID;
+    default: return INVALID;
   } 
   RCC->CFGR = tmpReg;
-  return HL_OK;
+  return OK;
 }
 
 

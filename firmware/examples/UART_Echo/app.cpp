@@ -1,22 +1,22 @@
 #include "hlib.h"
 
-HLib::uart_c COM1;
+HLib::uart_c com1;
 
 void Setup(void){
   HLib::PIN_SetMode(15, HLib::PERIPHERAL, HLib::OUT_PUSH_PULL);
   HLib::PIN_SetMode(16, HLib::PERIPHERAL, HLib::IN_PULL_UP);
-  COM1.Start(1, 115200);
-  COM1.Print("*****************************\n");
-  COM1.Print("** Welcome to HLib  **\n");
-  COM1.Print("*****************************\n"); 
-  COM1.Print("This program sends received data back\n");
+  com1.Start(1, 115200);
+  com1.Print("*****************************\n");
+  com1.Print("** Welcome to HLib  **\n");
+  com1.Print("*****************************\n"); 
+  com1.Print("This program sends received data back\n");
 }
 
 
 void Loop(void){
   uint8_t recvData;
-  if (COM1.HasData()){
-    COM1.Get(&recvData);
-    COM1.Out(recvData);
+  if (com1.HasData()){
+    com1.Get(&recvData);
+    com1.Out(recvData);
   }
 }

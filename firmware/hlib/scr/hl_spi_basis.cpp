@@ -43,8 +43,8 @@ namespace HLib{
 
 ////////////////////////////////////////////////////////////
 #ifdef INITIAL_CHECK 
-  #define _SPI_CONSTRUCT_CHECK() if (spiNum == NULL) {return HL_INVALID;} 
-  #define _SPI_STARTED_CHECK()   if (spiStarted == false) {return HL_NOT_START;} 
+  #define _SPI_CONSTRUCT_CHECK() if (spiNum == NULL) {return INVALID;} 
+  #define _SPI_STARTED_CHECK()   if (spiStarted == false) {return NOT_START;} 
 #else
   #define _SPI_CONSTRUCT_CHECK()
   #define _SPI_STARTED_CHECK()
@@ -72,8 +72,8 @@ spi_basis_c::spi_basis_c(){
  @param direction Communication direction of the SPI
  @param crcEnable TRUE: hardware CRC calculator is used.\n FALSE: hardware CRC calculator is not used
  @param crcPoly: CRC polynomial 
- @retval HL_INVALID one or some parameters is invalid. The method is cancel
- @retval HL_OK The used SPI is started OK
+ @retval INVALID one or some parameters is invalid. The method is cancel
+ @retval OK The used SPI is started OK
 */
 err_t spi_basis_c::Start(spi_direction_t direction, uint8_t spiNum,  uint16_t prescaler, bool idleLevel, bool secondEdge, 
 bool firstMSB,  bool crcEnable, uint16_t crcPoly){
@@ -90,7 +90,7 @@ bool firstMSB,  bool crcEnable, uint16_t crcPoly){
 	  #else
       #error "Unsupported MCU"
     #endif
-   	  default: SPIx = NULL; spiStarted = false; return HL_INVALID; 
+   	  default: SPIx = NULL; spiStarted = false; return INVALID; 
   } /* end switch */
   
   switch (prescaler){
@@ -102,7 +102,7 @@ bool firstMSB,  bool crcEnable, uint16_t crcPoly){
     case 64:  setPrescaler = SPI_PRESCALER_64;  break;
     case 128: setPrescaler = SPI_PRESCALER_128; break;
     case 256: setPrescaler = SPI_PRESCALER_256; break;
-    default : SPIx = NULL; return HL_INVALID;
+    default : SPIx = NULL; return INVALID;
   }
   /*config SPI/I2S */
   SPI_InitStruct.SPI_CPOL              = idleLevel  ? SPI_CPOL_High    : SPI_CPOL_Low;
@@ -128,17 +128,17 @@ bool firstMSB,  bool crcEnable, uint16_t crcPoly){
   SPIx->CR1 |= CR1_SPE_Set;     
   
   spiStarted = true;
-  return HL_OK;
+  return OK;
 }
 
 
 /**
  @brief Stop SPI/I2S and then disable its clock
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::Shutdown(){
-  if (!spiStarted){return HL_NOT_START;}
+  if (!spiStarted){return NOT_START;}
 
   SPIx->CR1 &= CR1_SPE_Reset;
   if (SPI1 == SPIx){
@@ -151,12 +151,12 @@ err_t spi_basis_c::Shutdown(){
     CLK_Ctrl(CLK_SPI3, DISABLE);
   }
   else{
-    return HL_INVALID;
+    return INVALID;
   }
 
   SPIx = NULL;
   spiStarted = false;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -164,16 +164,16 @@ err_t spi_basis_c::Shutdown(){
 /**
  @brief Wait until the output buffer empty and then send one byte
  @param sendData Data to send
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::Send(uint8_t sendData){
-  if (!spiStarted) {return HL_NOT_START;} 
+  if (!spiStarted) {return NOT_START;} 
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait, DO NOTHING */
   }  
   SPIx->DR = sendData;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -182,11 +182,11 @@ err_t spi_basis_c::Send(uint8_t sendData){
  @brief Send one byte. Wait until data transmision completed and then get receiving data
  @param sendData Data to send
  @param recvData Pointer to variable will hold receiving data
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::Send(uint8_t sendData, uint8_t *recvData){ 
-  if (!spiStarted) {return HL_NOT_START;} 
+  if (!spiStarted) {return NOT_START;} 
   Send(sendData);
   while (!(SPIx->SR & SPI_I2S_FLAG_TXE)){
     /* wait data to send, DO NOTHING */
@@ -195,7 +195,7 @@ err_t spi_basis_c::Send(uint8_t sendData, uint8_t *recvData){
     /* wait data send completly, get last received data, DO NOTHING */
   }
   *recvData = (uint8_t) SPIx->DR;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -204,17 +204,17 @@ err_t spi_basis_c::Send(uint8_t sendData, uint8_t *recvData){
  @brief Send an array of data
  @param sendBuf Array of data to send
  @param bufLen Length of array of data
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::Send(uint8_t sendBuf[], uint16_t bufLen){
   uint16_t index;
   
-  if (!spiStarted) {return HL_NOT_START;} 
+  if (!spiStarted) {return NOT_START;} 
   for (index=0; index<bufLen; index++){
     Send(sendBuf[index]);
   } 
-  return HL_OK;
+  return OK;
 }
 
 
@@ -224,16 +224,16 @@ err_t spi_basis_c::Send(uint8_t sendBuf[], uint16_t bufLen){
  @param sendBuf Array of data to send
  @param recvBuf Pointer to array of data will hold receiving data
  @param bufLen Length of send/receive array of data
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
  @attention This function may lost some data if there are some long-time interupts happen.
             In order to ensure data reliable, please use RecvSafe() which sends and receives byte by byte
 */
 err_t spi_basis_c::Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
   uint16_t index;
 
-  if (!spiStarted) {return HL_NOT_START;}
-  if (bufLen == 0) {return HL_OK;}
+  if (!spiStarted) {return NOT_START;}
+  if (bufLen == 0) {return OK;}
   /* not reuse Send(), write new one to get more efficient */
   while (SPIx->SR & SPI_I2S_FLAG_BSY);{
     /* wait previous transmision completly, DO NOTHING */
@@ -255,7 +255,7 @@ err_t spi_basis_c::Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
     /* wait the last recv data, DO NOTHING */
   }
   recvBuf[index-1] = SPIx->DR;
-  return HL_OK;
+  return OK;
 }
 
 
@@ -265,17 +265,17 @@ err_t spi_basis_c::Send(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
  @param sendBuf Array of data to send
  @param recvBuf Pointer to array of data will hold receiving data
  @param bufLen Length of send/receive array of data
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::RecvSafe(uint8_t sendBuf[], uint16_t bufLen, uint8_t recvBuf[]){
   uint16_t index;
 
-  if (!spiStarted) {return HL_NOT_START;}
+  if (!spiStarted) {return NOT_START;}
   for (index=0; index<bufLen; index++){
     Send(sendBuf[index], &(recvBuf[index]));
   }
-  return HL_OK;
+  return OK;
 }
 
 
@@ -296,14 +296,14 @@ uint16_t spi_basis_c::GetCRCPoly(){
 
 /**
  @brief Request sending hardware calculated CRC after current transmission completed
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
 */
 err_t spi_basis_c::SendCRC(){ 
-  if (!spiStarted) {return HL_NOT_START;}
+  if (!spiStarted) {return NOT_START;}
 
   SPIx->CR1 |= CR1_CRCNext_Set;
-  return HL_OK;
+  return OK;
 }      
 
 
@@ -340,12 +340,12 @@ uint16_t spi_basis_c::GetRecvCRC(){
 
 /**
  @brief Clear calculated CRC to prepare for new transmision
- @retval HL_NOT_START SPI is not started before calling this function
- @retval HL_OK The function is finished successfully
+ @retval NOT_START SPI is not started before calling this function
+ @retval OK The function is finished successfully
  @attention Only use when SPI is not busy or data corruption may happen
 */
 err_t spi_basis_c::ClearCRC(){
-  if (!spiStarted) {return HL_NOT_START;}
+  if (!spiStarted) {return NOT_START;}
   while (IsBusy()){
     /* wait until SPI finish current operating */
   }
@@ -353,7 +353,7 @@ err_t spi_basis_c::ClearCRC(){
   SPIx->CR1 &= CR1_CRCEN_Reset; //Disable CRC
   SPIx->CR1 |= CR1_CRCEN_Set;   //Enable CRC
   SPIx->CR1 |= CR1_SPE_Set;     //Enable SPI
-  return HL_OK;
+  return OK;
 } 
 
 

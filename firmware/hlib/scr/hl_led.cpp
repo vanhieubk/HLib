@@ -64,8 +64,8 @@ void LED_Start(void){
  @brief Set state of an LED
  @param ledIndex Index or the LED
  @param val TRUE turn on the LED, FALSE turn off the LED
- @retval HL_INVALID the ledIndex parameter is out of range
- @retval HL_OK function is finished correctly
+ @retval INVALID the ledIndex parameter is out of range
+ @retval OK function is finished correctly
 */
 err_t LED_Set(uint8_t ledIndex, bool val){
   if (ledIndex < NUM_OF_LEDS){
@@ -77,10 +77,10 @@ err_t LED_Set(uint8_t ledIndex, bool val){
       ledsMap[ledIndex].OutZero();
       ledsState[ledIndex] = 1;
     }
-		return HL_OK;
+		return OK;
   }
 	else{
-		return HL_INVALID;
+		return INVALID;
 	}
 }
 
@@ -89,17 +89,17 @@ err_t LED_Set(uint8_t ledIndex, bool val){
 /**
  @brief Turn on an LED
  @param ledIndex Index or the LED
- @retval HL_INVALID the ledIndex parameter is out of range
- @retval HL_OK function is finished correctly
+ @retval INVALID the ledIndex parameter is out of range
+ @retval OK function is finished correctly
 */
 err_t LED_On(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     ledsMap[ledIndex].OutOne();
     ledsState[ledIndex] = 1;
-		return HL_OK;
+		return OK;
   }
 	else{
-		return HL_INVALID;
+		return INVALID;
 	}
 }
 
@@ -107,14 +107,14 @@ err_t LED_On(uint8_t ledIndex){
 
 /**
  @brief Turn on all LEDs
- @retval HL_OK function is finished correctly
+ @retval OK function is finished correctly
 */
 err_t LED_OnAll(){
   for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
     ledsMap[ledIndex].OutOne();
     ledsState[ledIndex] = 1;
   }
-	return HL_OK;
+	return OK;
 }
 
 
@@ -122,17 +122,17 @@ err_t LED_OnAll(){
 /**
  @brief Turn off an LED
  @param ledIndex Index or the LED
- @retval HL_INVALID the ledIndex parameter is out of range
- @retval HL_OK function is finished correctly
+ @retval INVALID the ledIndex parameter is out of range
+ @retval OK function is finished correctly
 */
 err_t LED_Off(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
     ledsMap[ledIndex].OutZero();
     ledsState[ledIndex] = 0;
-		return HL_OK;
+		return OK;
   }
 	else{
-		return HL_INVALID;
+		return INVALID;
 	}
 }
 
@@ -140,14 +140,14 @@ err_t LED_Off(uint8_t ledIndex){
 
 /**
  @brief Turn off all LEDs
- @retval HL_OK function is finished correctly
+ @retval OK function is finished correctly
 */
 err_t LED_OffAll(){
   for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
     ledsMap[ledIndex].OutZero();
     ledsState[ledIndex] = 1;
   }
-	return HL_OK;
+	return OK;
 }
 
 
@@ -155,8 +155,8 @@ err_t LED_OffAll(){
 /**
  @brief Toggle state of an LED
  @param ledIndex Index or the LED
- @retval HL_INVALID the ledIndex parameter is out of range
- @retval HL_OK function is finished correctly
+ @retval INVALID the ledIndex parameter is out of range
+ @retval OK function is finished correctly
 */
 err_t LED_Toggle(uint8_t ledIndex){
   if (ledIndex < NUM_OF_LEDS){
@@ -168,10 +168,10 @@ err_t LED_Toggle(uint8_t ledIndex){
       ledsMap[ledIndex].OutOne();
       ledsState[ledIndex] = 1;
     }
-		return HL_OK;
+		return OK;
   }
 	else{
-		return HL_INVALID;
+		return INVALID;
 	}
 }
 
@@ -179,7 +179,7 @@ err_t LED_Toggle(uint8_t ledIndex){
 
 /**
  @brief Toggle all LEDs
- @retval HL_OK function is finished correctly
+ @retval OK function is finished correctly
 */
 err_t LED_ToggleAll(){
   for (uint8_t ledIndex=0; ledIndex < NUM_OF_LEDS; ledIndex++){
@@ -192,7 +192,7 @@ err_t LED_ToggleAll(){
 			ledsState[ledIndex] = 1;
 		}
   }
-  return HL_OK;
+  return OK;
 }
 
 

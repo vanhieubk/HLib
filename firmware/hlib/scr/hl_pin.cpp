@@ -125,10 +125,10 @@ void PIN_Release(uint8_t pinIndex){
  @param pinIndex Index of the pin
  @param mode Operation mode. Please refer the table pin map for valid configuration
  @param type Type of pin
- @return HL_OK, HL_INVALID
+ @return OK, INVALID
  @attention NEED redefine alternate peripheral functions. Please select type corresponding with selected mode. If you make a wrong
  pin configuration, your system may behave in unpredictable manner. Thereforce, we
- strongly recommend that you check return value of the function and make sure it is HL_OK
+ strongly recommend that you check return value of the function and make sure it is OK
  @warning Due to limitation of STM32F1xx families, pin's mode may be overrided if multi-peripherals
  which use same pin are enabled. This library cannot handle these situations. You have to
  ensure that no pin are used by different peripheral at the same time 
