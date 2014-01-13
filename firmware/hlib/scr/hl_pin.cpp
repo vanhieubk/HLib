@@ -25,8 +25,6 @@
 
 
 namespace HLib{
-
-
 ////   STATIC VARIABLEs   ///////////////////////////////////////////////
 #ifdef PLATFORM_STM32F100_STARTER
   #define NUM_OF_PIN 23

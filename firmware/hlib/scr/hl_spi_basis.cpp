@@ -16,17 +16,7 @@
  made by customers of the coding information contained herein in connection with their products.\n
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
- 
- @class spi_basis_c
- @brief Providing controlling method for SPI peripheral of a STM32
- @attention
- - Only master SPI mode is supported. No slave mode.
- - Only 8-bit data frame mode is supported. No 16-bit data frame mode.
- - DMA has not supported yet
- - Interrupt has not supported yet
 */
-
-
 
 #include "hlib.h"
 namespace HLib{

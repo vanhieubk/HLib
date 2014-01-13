@@ -18,13 +18,6 @@
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
 
-/**
- @class adc_basis_c
- @brief Providing basis controlling methods for ADC peripheral of an STM32
- @attention This class only implement very basis functions of STM32's ADC.
-	          All advanced functions are removed/hided to form an easy-to-use, easy-to-understand class
-*/
-
 #include "hlib.h"
 
 namespace HLib{

@@ -1,8 +1,37 @@
+/**
+ @file hl_pin_ll.cpp
+ @brief Providing low-level I/O functions for a pin.
+
+ @author  Bui Van Hieu <bvhieu@cse.hcmut.edu.vn>
+ @version 1.0
+ @date 5-12-2013
+
+ @copyright
+ This project and all its relevant hardware designs, documents, source codes, compiled libraries
+ belong to <b> Smart Sensing and Intelligent Controlling Group (SSAIC Group)</b>. 
+ You have to comply with <b> Non-Commercial Share-Alike Creative Common License </b> 
+ in order to share (copy, distribute, transmit) or remix (modify, reproduce, adapt) these works.\n
+ SSAIC Group shall not be held liable for any direct, indirect or consequential damages 
+ with respect to any claims arising from the content of hardware, firmware and/or the use 
+ made by customers of the coding information contained herein in connection with their products.\n
+ You are prohibited from commercializing in any kind that using or basing on these works
+ without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
+*/
+
+
 #include "hlib.h"
-
-
 namespace HLib_LL{
-
+	
+	
+////////////////////////////////////////////
+/**
+ @brief Construction
+ @para clk_periph_t Peripheral clock of the pin.
+ @para port The port that the pin belongs to
+ @para pin Index of the pin in the port
+ @return None
+ @attention All the parameter must be set correctly or un-predictable action can happen
+*/
 pin_ll_c::pin_ll_c(HLib::clk_periph_t clk, GPIO_TypeDef* port, uint8_t pin){
   this->clk   = clk;
   this->port  = port;
@@ -10,6 +39,13 @@ pin_ll_c::pin_ll_c(HLib::clk_periph_t clk, GPIO_TypeDef* port, uint8_t pin){
 } 
 
 
+/**
+ @brief Set operating mode of the pin
+ @para mode Operating mode of the pin
+ @para type Electronic type of the pin
+ @retval HLib::INVALID One or some parameters are not valid
+ @retval HLib::OK The functions is finished OK
+*/
 HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
   uint32_t configBits;
   uint32_t reg;
@@ -68,21 +104,41 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
 }
 
 
+/**
+ @brief Release the pin (set its mode to input floating)
+ @return None
+*/
 void pin_ll_c::Release(){
   SetMode(HLib::GPIO, HLib::IN_FLOATING);
 }
 
 
+
+/**
+ @brief Set output to 1
+ @return None
+*/
 void pin_ll_c::OutOne(){
   port->BSRR = HL_BitMask(pin);
 }
 
 
+
+/**
+ @brief Set output to 0
+ @return None
+*/
 void pin_ll_c::OutZero(){
   port->BRR = HL_BitMask(pin);
 }
 
 
+
+/**
+ @brief Set specified value for pin's output
+ @para val Set value. TRUE: output will be set 1. FALSE: output will be set 0
+ @return None
+*/
 void pin_ll_c::OutVal(bool val){
   if (val){
     OutOne();
@@ -93,6 +149,12 @@ void pin_ll_c::OutVal(bool val){
 }
 
 
+
+/**
+ @brief Get input value of the pin
+ @retval TRUE: the pin input is 1
+ @retval FALSE: the pin input is 0
+*/
 bool pin_ll_c::GetInput(){
   return (bool) (port->IDR & HL_BitMask(pin));
 }

@@ -22,7 +22,17 @@
 #define __HL_UART_H
 
 namespace HLib{
-	
+
+/**
+ @class uart_c
+ @brief Providing controlling method for USART peripheral of STM32
+ @attention
+ - This library always enables receiving feature.
+ - This library always uses 1-stop-bit mode
+ - DMA transfer/receiver has not been supported\n.
+ - Current version only supports polling receiving. Interrupt receiving will be implemented in next version
+ - This library neither support 9-bit data word nor parity check. If you need this feature, please contact us.
+*/	
 class uart_c {
 private:
   bool       uartStarted;
