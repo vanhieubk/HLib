@@ -20,15 +20,6 @@
 
 #include "hlib.h"
 
-//  GLOBAL VARIABLES  ///////////////
-volatile uint8_t optFreeVar; 
-
-//  GLOBAL OBJECTs  //////////////
-uart_c     COM1(1); 
-#ifdef PLATFORM_STM32F100_STARTER
-  hd44780_c  LCD;
-#endif
-
 
 /** \addtogroup HLibGlobalFunc HLib's global functions
  @{
@@ -46,20 +37,9 @@ extern void Setup(void);
 extern void Loop(void);
 
 
-/////////////////////////////////
-/**
- @brief main function of the program. Implement Setup(), Loop() framework of the HLib library
- @return No meaning
-*/
-int main(void){
-  /* Looping framework */
-  HLib_Start();
-  Setup();
-  while (1){
-    Loop();
-  }
-}
-
+namespace HLib{
+//  GLOBAL VARIABLES  ///////////////
+volatile uint8_t optFreeVar; 
 
 // HLib INITIALIZATION  ////////////////
 /**
@@ -67,30 +47,26 @@ int main(void){
  @return None
 */  
 void HLib_Start(void){
-	GPIO_InitTypeDef  GPIO_InitStruct;
 	PIN_Start();
 	LED_Start();
-	
-	/* enable IO of USART1 */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	 
-	GPIO_InitStruct.GPIO_Pin   = GPIO_Pin_9;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_AF_PP;
-	GPIO_Init(GPIOA, &GPIO_InitStruct);
-	GPIO_InitStruct.GPIO_Pin   = GPIO_Pin_10;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_IPU;
-	GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  COM1.Start(115200);
-  COM1.Print("WELCOME TO HLib\n");
-  #ifdef PLATFORM_STM32F100_STARTER
-    LED_On(0);
-    LED_On(1);
-    LCD.Start();
-  	LCD.Print("WELCOME TO HLib");
-  #endif
+	LED_OnAll();
 }
+
+} /* namespace */
+
+
+/**
+ @brief main function of the program. Implement Setup(), Loop() framework of the HLib library
+ @return No meaning
+*/
+int main(void){
+  /* Looping framework */
+  HLib::HLib_Start();
+  Setup();
+  while (1){
+    Loop();
+  }
+}
+
 
 /** @} */

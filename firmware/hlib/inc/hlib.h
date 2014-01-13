@@ -43,24 +43,27 @@
 ////  INCLUDE HLib //////////////////
 #include "hl_def.h"
 #include "hl_util.h"
+#include "hl_clk.h"
+#include "hl_pin_ll.h"
 #include "hl_pin.h"
 #include "hl_led.h"
 #include "hl_uart.h"
-#include "hl_spi_base.h"
-#include "hl_adc.h"
+#include "hl_spi_basis.h"
+#include "hl_adc_basis.h"
 #include "hl_crc.h"
+
+
 
 /** \addtogroup HLibGlobalVar HLib's global variables
  @{
 */
 //  GLOBAL VARIABLES  ///////////////
+namespace HLib{
+	
 extern volatile uint8_t optFreeVar; /**< Univeral variable for implementing small delay in C/C++ */
 
-//  GLOBAL OBJECTS  ///////////////
-extern uart_c     COM1; /**< COM1/USART1 of a platform */
-#ifdef PLATFORM_STM32F100_STARTER
-  extern hd44780_c  LCD; /**< HD44780 LCD controller. Only available for STM32F100 STARTER */
-#endif
+} /* namespace */
+
 /** @} */
 
 // HLIB FUNCTIONS  ///////////////

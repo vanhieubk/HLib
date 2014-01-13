@@ -17,12 +17,12 @@ typedef struct{
 
 class tlc5971_c{
   private: 
-  spi_base_c* usedSpi;
+  HLib::spi_base_c* usedSpi;
   tlc5971_packet_t pkt;
   void SetCmd(uint8_t cmdVal);
 
   public:
-  tlc5971_c(spi_base_c* spi);
+  tlc5971_c(HLib::spi_base_c* spi);
   void SetFc(uint8_t fcVal);
   uint8_t CreateFc(bool outTmg, bool extGck, bool tmGrst, bool dspRpt, bool blank);
   void SetBlueBc(uint8_t bcVal);

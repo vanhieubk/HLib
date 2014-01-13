@@ -19,6 +19,8 @@
 #ifndef __HL_UTIL_H
 #define __HL_UTIL_H
 
+namespace HLib{
+
 /** \addtogroup HLibGlobalMac HLib's global macros
  @{
 */
@@ -30,8 +32,9 @@
 
 /** @} */
 
-void HL_LoopDelay(uint32_t numLoop);
-void HL_NumToStr(uint32_t num, uint8_t radix, char outStr[]);
+void LoopDelay(uint32_t numLoop);
+void NumToStr(uint32_t num, uint8_t radix, char outStr[]);
+void Halt();
 
-
+} /* namespace */
 #endif

@@ -16,18 +16,18 @@
  You are prohibited from commercializing in any kind that using or basing on these works
  without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
 */
+#include "hlib.h"
+namespace HLib{
 
 
 /***********************************************************************/
-#include "hlib.h"
-
 /**
  @brief Enable CRC clock, reset all registers to default values
  @return None
  @attention This method have to be called to enable CRC block before other methods
 */
 void CRC_c::Start() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC,ENABLE);
+	CLK_Ctrl(CLK_CRC,ENABLE);
 	CRC->CR = CRC_CR_RESET;
 }
 
@@ -38,7 +38,7 @@ void CRC_c::Start() {
  @return None
 */
 void CRC_c::Shutdown() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, DISABLE);
+	CLK_Ctrl(CLK_CRC, DISABLE);
 }
 
 
@@ -123,4 +123,8 @@ uint32_t CRC_c::CalculateCont(uint32_t dataBuffer[], uint16_t bufferSize) {
 bool CRC_c::Check(uint32_t dataBuffer[], uint16_t bufferSize, uint32_t receivedCRC) {
   return (receivedCRC == Calculate(dataBuffer, bufferSize));
 }
+
+
+} /* namespace */
+
 

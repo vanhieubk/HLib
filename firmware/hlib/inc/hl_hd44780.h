@@ -20,6 +20,8 @@
 #ifndef __HL_HD44780_H
 #define __HL_HD44780_H
 
+namespace HLib{
+
 ///////////////////////////////////////
 #define HD44780_CLEAR_DISPLAY_CMD           0x01 /**< Clear display command*/
 #define HD44780_CURSOR_HOME_CMD             0x02 /**< Set cursor to home command*/
@@ -89,5 +91,7 @@ public:
   void Print(uint32_t printNum);
   void Print(int32_t printNum);
 };
+
+} /* namespace */
 
 #endif /*__HL_HD44780_H  */

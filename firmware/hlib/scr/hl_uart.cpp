@@ -22,39 +22,17 @@
 
 
 #include "hlib.h"
+namespace HLib{
 
-////////////////////////////////////////////////////////////
-#ifdef INITIAL_CHECK 
-  #define _UART_CONSTRUCT_CHECK() if (uartNum == NULL) {return HL_INVALID;} 
-  #define _UART_STARTED_CHECK()   if (uartStarted == false) {return HL_NOT_START;} 
-#else
-  #define _UART_CONSTRUCT_CHECK()
-  #define _UART_STARTED_CHECK()
-#endif
 
 ////////////////////////////////////////////////////////////
 /**
  @brief Construction function
- @param uartNum UART will be used.   
  @return None
 */
-uart_c::uart_c(uint8_t uartNum){
-  switch (uartNum){
-    #if defined(STM32F100C8_MCU)
-      case 1:  this->uartNum = uartNum; UARTx = USART1; break;
-      case 2:  this->uartNum = uartNum; UARTx = USART2; break;
-    #elif defined(STM32F103RCT6_MCU)
-      case 1:  this->uartNum = uartNum; UARTx = USART1; break;
-      case 2:  this->uartNum = uartNum; UARTx = USART2; break;
-      case 3:  this->uartNum = uartNum; UARTx = USART3; break;
-      case 4:  this->uartNum = uartNum; UARTx = UART4; break;
-      case 5:  this->uartNum = uartNum; UARTx = UART5; break;
-	#else
-      #error "Unsupported platform"
-    #endif
-   	  default: this->uartNum = 0; UARTx = NULL;  
-  } /* end switch */
-  uartStarted    = false;
+uart_c::uart_c(){
+  UARTx     	= NULL;
+	uartStarted = false;
 }
 
 
@@ -63,69 +41,75 @@ uart_c::uart_c(uint8_t uartNum){
  @brief Start serial communicating
  @param baudRate UART's baud rate
  @param stopBit UART's stopBit
- @return HL_OK , HL_INVALID
+ @retval HL_INVALID the uartNum parameter is out of range
+ @retval HL_OK the function if finished successfully
+ @attention the baudRate parameter is not checked. Use a valid value with your platform.
 */
-err_t  uart_c::Start(uint32_t baudRate, uint16_t stopBit){
+err_t  uart_c::Start(uint8_t uartNum, uint32_t baudRate){
   USART_InitTypeDef USART_InitStruct;
-  
-  _UART_CONSTRUCT_CHECK();
 
-  /* enable UART clock */
   switch (uartNum){
-    case 1: RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE); break;
-  	case 2: RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE); break;
-	  case 3: RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE); break;
-	  case 4: RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,  ENABLE); break;
-	  case 5: RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5,  ENABLE); break;
-  }
-  
-  /*config USART */
-  if (0 != uartNum){  
-    USART_InitStruct.USART_Mode       = USART_Mode_Rx | USART_Mode_Tx;
-    USART_InitStruct.USART_Parity     = USART_Parity_No;
-    USART_InitStruct.USART_BaudRate   = baudRate;
-    USART_InitStruct.USART_StopBits   = stopBit;
-    USART_InitStruct.USART_WordLength = USART_WordLength_8b;
-    USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    USART_Init(UARTx, &USART_InitStruct);
+    #if defined(STM32F100C8_MCU)
+      case 1:  UARTx = USART1; CLK_Ctrl(CLK_UART1, true); break;
+      case 2:  UARTx = USART2; CLK_Ctrl(CLK_UART2, true);break;
+    #elif defined(STM32F103RCT6_MCU)
+      case 1:  UARTx = USART1; CLK_Ctrl(CLK_UART1, true);break;
+      case 2:  UARTx = USART2; CLK_Ctrl(CLK_UART2, true);break;
+      case 3:  UARTx = USART3; CLK_Ctrl(CLK_UART2, true);break;
+      case 4:  UARTx = UART4;  CLK_Ctrl(CLK_UART3, true);break;
+      case 5:  UARTx = UART5;  CLK_Ctrl(CLK_UART4, true);break;
+	  #else
+      #error "Unsupported platform"
+    #endif
+   	  default: uartStarted = false; UARTx = NULL; return HL_INVALID;  
+  } /* end switch */
     
-    /*enable USART*/
-    USART_Cmd(UARTx, ENABLE);
-    uartStarted = true;
-  }
+	USART_InitStruct.USART_Mode       = USART_Mode_Rx | USART_Mode_Tx;
+	USART_InitStruct.USART_Parity     = USART_Parity_No;
+	USART_InitStruct.USART_BaudRate   = baudRate;
+	USART_InitStruct.USART_StopBits   = USART_StopBits_1;
+	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
+	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_Cmd(UARTx, DISABLE);
+	USART_Init(UARTx, &USART_InitStruct);
+	
+	/*enable USART*/
+	USART_Cmd(UARTx, ENABLE);
+	uartStarted = true;
   return HL_OK;
 }
 
 
 
 /**
- @overload
- @brief Start serial communicating in default mode with 8 data-bit, 1 stop-bit, no-parity
- @param baudRate UART's baud rate
- @return HL_OK, HL_INVALID
-*/
-err_t  uart_c::Start(uint32_t baudRate){
-  return Start(baudRate, USART_StopBits_1);
-}
-
-
-
-/**
- @brief Stop UART clock
- @return HL_OK, HL_INVALID
+ @brief Stop UART and disable its clock
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Shutdown(){
-  
-  _UART_CONSTRUCT_CHECK();
-  
+  if (!uartStarted) { return HL_NOT_START;}
+ 
   USART_Cmd(UARTx, DISABLE);
-  switch (uartNum){
-    case 1:	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, DISABLE); break;
-	  case 2:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, DISABLE);	break;
-	  case 3:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, DISABLE);	break;
-	  case 4:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,  DISABLE);	break;
-	  case 5:	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5,  DISABLE);	break;
+	if (USART1 == UARTx){
+		CLK_Ctrl(CLK_UART1, DISABLE);
   }
+	else if (USART2 == UARTx){
+		CLK_Ctrl(CLK_UART2, DISABLE);
+  }
+	#ifdef STM32F103RCT6_MCU
+	else if (USART3 == UARTx){
+		CLK_Ctrl(CLK_UART3, DISABLE);
+  }
+	
+	else if (UART4 == UARTx){
+		CLK_Ctrl(CLK_UART4, DISABLE);
+  }
+	else if (UART5 == UARTx){
+		CLK_Ctrl(CLK_UART5, DISABLE);
+  }
+	#endif
+  UARTx 			= NULL;
+	uartStarted = false;
   return HL_OK;
 }
 
@@ -134,10 +118,11 @@ err_t  uart_c::Shutdown(){
 /**
  @brief Send one character
  @param outChar Character to send
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Print(char outChar){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   /* Wait until output buffer is empty */ 
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
   UARTx->DR = (uint16_t)  outChar;
@@ -150,10 +135,11 @@ err_t  uart_c::Print(char outChar){
  @overload
  @brief Send one string
  @param outStr String to send
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Print(char* outStr){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   while (*outStr != '\0'){
     while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */  
     UARTx->DR = (uint16_t) (*outStr);
@@ -169,40 +155,31 @@ err_t  uart_c::Print(char* outStr){
  @brief Convert one unsigned interger into string and then send it 
  @param outNum Unsigned interger number to send
  @param radix Valid values are 2, 8, 10, 16
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_INVALID the radix parameter is out of range
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Print(uint32_t outNum, uint8_t radix){
   char  outStr[33];
 
-  _UART_STARTED_CHECK();
-  #ifdef PARAM_CHECK_FULL
-    if ((radix != 2) && (radix != 8) && (radix != 10) && (radix != 16)) { return HL_INVALID; }
-  #endif 
-  HL_NumToStr(outNum, radix, outStr);
+  if (!uartStarted) { return HL_NOT_START;}
+  if ((radix != 2) && (radix != 8) && (radix != 10) && (radix != 16)) { return HL_INVALID; }
+
+  NumToStr(outNum, radix, outStr);
   return Print((char*) outStr);
 }
 
-
-
-/**
- @overload
- @brief Convert one unsigned interger into string and then send it with default radix (decimal)
- @param outNum Unsigned interger number to send
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
-*/
-err_t  uart_c::Print(uint32_t outNum){
-  return Print(outNum, 10);
-}
 
 
 
 /**
  @brief Convert one signed interger into decimal string and then send it
  @param outNum Signed interger number to send
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Print(int32_t outNum){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   if (outNum<0){
     Print('-');
     return Print((uint32_t) (-outNum), 10);
@@ -217,10 +194,11 @@ err_t  uart_c::Print(int32_t outNum){
 /**
  @brief Send one raw 8-bit number 
  @param outNum 8-bit number to send
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Out(uint8_t outNum){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
   UARTx->DR = (uint16_t)  outNum;
   return HL_OK;
@@ -232,10 +210,11 @@ err_t  uart_c::Out(uint8_t outNum){
  @overload
  @brief Send one raw 16-bit number. The low-order part is sent first.
  @param outNum 16-bit number to send. 
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Out(uint16_t outNum){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
   UARTx->DR = (uint16_t)  (outNum);
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
@@ -249,18 +228,19 @@ err_t  uart_c::Out(uint16_t outNum){
  @overload
  @brief Send one raw 32-bit number. The low-order part is sent first.
  @param outNum 32-bit number to send. 
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Out(uint32_t outNum){
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
-  UARTx->DR = (uint16_t) (outNum);
+  UARTx->DR = (uint16_t) ((outNum ) & 0xFF);
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
-  UARTx->DR = (uint16_t) (outNum >> 8);
+  UARTx->DR = (uint16_t) ((outNum >> 8) & 0xFF);
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
-  UARTx->DR = (uint16_t) (outNum >> 16);
+  UARTx->DR = (uint16_t) ((outNum >> 16) & 0xFF);
   while (!(UARTx->SR & USART_FLAG_TXE)) {  }; /* wait */ 
-  UARTx->DR = (uint16_t) (outNum >> 24);
+  UARTx->DR = (uint16_t) ((outNum >> 24) & 0xFF);
   return HL_OK;
 }
 
@@ -270,12 +250,13 @@ err_t  uart_c::Out(uint32_t outNum){
  @brief Send one buffer
  @param outBuf Buffer to send
  @param bufLen Length in byte of the buffer
- @return HL_OK, HL_NOT_STARTED, HL_INVALID
+ @retval HL_NOT_START the UART has not been started before
+ @retval HL_OK the function is finished successfully
 */
 err_t  uart_c::Out(uint8_t outBuf[], uint32_t bufLen){
   uint32_t count = 0;
 
-  _UART_STARTED_CHECK();
+  if (!uartStarted) { return HL_NOT_START;}
   while (count < bufLen){
     while (!(UARTx->SR & USART_FLAG_TXE)) {  } /* wait */
     UARTx->DR = (uint16_t) outBuf[count];
@@ -287,10 +268,14 @@ err_t  uart_c::Out(uint8_t outBuf[], uint32_t bufLen){
 
 /**
  @brief Get one received byte in receiving buffer
- @return Received data 
+ @para recvData pointer to memory stored receiving data
+ @retval HL_NOT_START the UART has not been started before, recvData is not modified
+ @retval HL_OK the function is finished successfully
 */
-uint8_t uart_c::Get(void){
-  return (uint8_t)(UARTx->DR & (uint16_t)0x00FF);
+err_t uart_c::Get(uint8_t* recvData){
+  if (!uartStarted) { return HL_NOT_START;}
+	*recvData = (uint8_t) (UARTx->DR & (uint16_t) 0x00FF);
+	return HL_OK;
 }
 
 
@@ -300,7 +285,12 @@ uint8_t uart_c::Get(void){
  @retval FALSE no new data
 */
 bool uart_c::HasData(void){
-  return ( (UARTx->SR & USART_FLAG_RXNE) != 0 );
+  if (!uartStarted) { 
+		return false;
+  }
+  else {
+    return ( (UARTx->SR & USART_FLAG_RXNE) != 0 );
+	}
 }
 /////////////////////////////////////////////////
 extern "C" {
@@ -309,3 +299,7 @@ void USART1_IRQHandler(void){
 }
   
 } /* end extern "C" */
+
+
+} /* namespace */
+

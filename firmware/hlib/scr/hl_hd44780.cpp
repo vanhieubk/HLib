@@ -17,8 +17,9 @@
  * You are prohibited from commercializing in any kind that using or basing on these works
  * without written permission from SSAIC Group. Please contact ssaic@googlegroups.com for commercializing
  */
-
 #include "hlib.h"  
+namespace HLib{
+
 
 /**
   * @brief Construction function. Do nothing
@@ -65,7 +66,7 @@ void hd44780_c::Start(void){
   EntryMode(false, true);
   Clear();
   Home();
-  HL_LoopDelay(1000000);
+  HLib::LoopDelay(1000000);
   Print("Wellcome to HLib");
 }
 
@@ -124,7 +125,7 @@ void hd44780_c::FunctionSet(bool eightBit, bool font5x10){
     writtenData |= 0x04;
   }
   Write(writtenData, true);
-  HL_LoopDelay(HD44780_FUNCTION_SET_DELAY);
+  LoopDelay(HD44780_FUNCTION_SET_DELAY);
 }
 
 
@@ -137,7 +138,7 @@ void hd44780_c::FunctionSet(bool eightBit, bool font5x10){
   */
 void hd44780_c::Clear(void){
   Write(HD44780_CLEAR_DISPLAY_CMD, true);
-  HL_LoopDelay(HD44780_CLEAR_DISPLAY_DELAY);  
+  LoopDelay(HD44780_CLEAR_DISPLAY_DELAY);  
 }
 
 
@@ -148,7 +149,7 @@ void hd44780_c::Clear(void){
   */
 void hd44780_c::Home(void){
   Write(HD44780_CURSOR_HOME_CMD, true);
-  HL_LoopDelay(HD44780_CURSOR_HOME_DELAY);  
+  LoopDelay(HD44780_CURSOR_HOME_DELAY);  
 }
 
 
@@ -168,7 +169,7 @@ void hd44780_c::EntryMode(bool shift, bool increase){
     writtenData |= 0x02;
   }
   Write(writtenData, true);
-  HL_LoopDelay(HD44780_ENTRY_MODE_DELAY);
+  LoopDelay(HD44780_ENTRY_MODE_DELAY);
 }
 
 
@@ -192,7 +193,7 @@ void hd44780_c::OnOff(bool displayOn, bool cursorOn, bool cursorBlink){
     writtenData |= 0x01;
   }
   Write(writtenData, true);
-  HL_LoopDelay(HD44780_DISPLAY_ON_OFF_DELAY);
+  LoopDelay(HD44780_DISPLAY_ON_OFF_DELAY);
 }
 
 
@@ -207,7 +208,7 @@ void hd44780_c::Goto(uint8_t charLine, uint8_t charCol){
   uint8_t absAddr;
   absAddr = (charLine * 0x40) + charCol;
   Write((absAddr & 0xEF) | HD44780_SET_DDRAM_ADDRESS_CMD, true);
-  HL_LoopDelay(HD44780_SET_DDRAM_ADDRESS_DELAY);
+  LoopDelay(HD44780_SET_DDRAM_ADDRESS_DELAY);
 }
  
 
@@ -220,7 +221,7 @@ void hd44780_c::Goto(uint8_t charLine, uint8_t charCol){
   */
 void hd44780_c::Print(char printChar){
   Write(printChar, false);   
-  HL_LoopDelay(200);
+  LoopDelay(200);
 }
 
 
@@ -246,7 +247,7 @@ void hd44780_c::Print(char* printString){
   */
 void hd44780_c::Print(uint32_t printNum, uint8_t radix){
   char outStr[33];
-  HL_NumToStr(printNum, radix, outStr);
+  HLib::NumToStr(printNum, radix, outStr);
   Print((char*) outStr);
 }
 
@@ -277,3 +278,7 @@ void hd44780_c::Print(int32_t printNum){
     Print((uint32_t) printNum, 10);
   }
 }
+
+
+} /* namespace */
+
