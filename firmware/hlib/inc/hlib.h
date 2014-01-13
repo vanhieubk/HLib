@@ -48,8 +48,8 @@
 #include "hl_pin.h"
 #include "hl_led.h"
 #include "hl_uart.h"
-#include "hl_spi_base.h"
-#include "hl_adc.h"
+#include "hl_spi_basis.h"
+#include "hl_adc_basis.h"
 #include "hl_crc.h"
 
 
