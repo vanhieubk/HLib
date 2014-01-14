@@ -27,7 +27,27 @@ namespace HLib{
  @return None
 */
 adc_c::adc_c(uint8_t adcNum){
-  #if defined(STM32F100C8_MCU)
+  ADCx 				= NULL;
+  adcStarted  = false;
+}
+
+
+/**
+ @brief Turning on an ADC, configuring its operating, and calibrating 
+ @param adcMode Inter-operation of ADCs. 
+ The version 1.0 library ignores this parameter and it is set as Independent 
+ @param triggerSource The source that trigger conversion
+ @param singleConv <b>TRUE</b> stop after finish one conversion./n<b>FALSE</b> start new conversion after finish.
+ @param rightAlign <b>TRUE</b> conversing data is aligned right/n<b>FALSE</b>conversing data is aligned left
+ @param scanMode <b>TRUE</b>each conversion scan on multi-channels/n<b>FALSE</b> each conversion measures only one channel
+ @param numOfScan number of channels are scanned each conversion. This parameter is ignored if scanMode = FALSE
+ @retval HL_INVALID some parameters' values are invalid 
+ @retval HL_UNSUPPORT some parameters' values are not supported in selected platform
+ @retval HL_UNKNOW function reaches some unknown errors 
+ @retval HL_OK function is performed OK
+*/
+err_t adc_c::Start(adc_mode_t adcMode, uint8_t triggerSource, bool singleConv, bool rightAlign, bool scanMode, uint8_t numOfScan){
+    #if defined(STM32F100C8_MCU)
     switch (adcNum){
       case 1:  this->adcNum = adcNum; ADCx = ADC1; break;
       default: this->adcNum = 0; ADCx = NULL;  
@@ -42,43 +62,14 @@ adc_c::adc_c(uint8_t adcNum){
   #else
     #error "Unsupported MCU"
   #endif
-  adcStarted    = false;
-}
-
-/**
- @brief Turning on an ADC, configuring its operating, and calibrating 
- @param adcMode Inter-operation of ADCs. The revision 1.0 library ignores this parameter and it is set as Independent 
- @param triggerSource The source that trigger conversion
- @param singleConv <b>TRUE</b> stop after finish one conversion./n<b>FALSE</b> start new conversion after finish.
- @param rightAlign <b>TRUE</b> conversing data is aligned right/n<b>FALSE</b>conversing data is aligned left
- @param scanMode <b>TRUE</b>each conversion scan on multi-channels/n<b>FALSE</b> each conversion measures only one channel
- @param numOfScan number of channels are scanned each conversion. This parameter is ignored if scanMode = FALSE
- @retval HL_INVALID some parameters' values are invalid 
- @retval HL_UNSUPPORT some parameters' values are not supported in selected platform
- @retval HL_UNKNOW function reaches some unknown errors 
- @retval HL_OK function is performed OK
-*/
-err_t adc_c::Start(adc_mode_t adcMode, uint8_t triggerSource, bool singleConv, bool rightAlign, bool scanMode, uint8_t numOfScan){
-  return HL_OK;
+	return HL_OK;
 }
 //err_t adc_c::Start(uint8_t triggerSource, bool singleConv, bool rightAlign, bool scanMode, uint8_t numOfScan);
 //err_t adc_c::Start(bool singleConv, bool rightAlign, bool scanMode, uint8_t numOfScan);
 
 
 
-/**
- @overload
- @brief Turning on an ADC, configuring default mode, and then calibrating.\n
-  *Default configuration is: independent mode, software trigger source, single conversion, right alignment, one channel
- @retval HL_INVALID some parameters' values are invalid 
- @retval HL_UNSUPPORT some parameters' values are not supported in selected platform
- @retval HL_UNKNOW function reaches some unknown errors 
- @retval HL_OK function is performed OK
-*/
-err_t adc_c::Start(){ /*adcMode = independent, triggerSource = software, singleConv = true, rightAlign = true, scanMode=false*/
-  
-  return HL_OK;
-}
+
 
 
 
@@ -87,7 +78,22 @@ err_t adc_c::Start(){ /*adcMode = independent, triggerSource = software, singleC
  @return HL_OK, HL_INVALID
 */
 err_t adc_c::Shutdown(){
-  /*ADD CODE HERE */  
+  /*ADD CODE HERE */
+  if (!adcStarted) {return HL_NOT_START;}
+  if (ADC1 == ADCx){
+    CLK_Ctrl(CLK_ADC1, false);
+  }
+  else if (ADC2 == ADCx){
+    CLK_Ctrl(CLK_ADC2, false);
+  }
+  else if (ADC3 == ADCx){
+    CLK_Ctrl(CLK_ADC3, false);
+  }  
+  else{
+    return HL_INVALID;
+  }
+  ADCx = NULL;
+  adcStarted = false;
   return HL_OK;
 }
 
@@ -111,35 +117,6 @@ void adc_c::Calib(){
 err_t adc_c::SetChannel(uint8_t channel){
   return HL_OK;
 }
-
-
-
-/**
- @brief
- @param
- @param
- @return
-*/
-err_t adc_c::SetChannel(uint8_t channel, uint8_t convOrder){
-  return HL_OK;
-}
-
-
-
-/**
- @brief
- @param
- @param
- @return
-*/
-void adc_c::SetConvMode(bool singleConversion){
-
-}
-
-
-
-
-
 
 
 /**
