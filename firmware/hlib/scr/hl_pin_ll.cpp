@@ -50,6 +50,7 @@ HLib::err_t pin_ll_c::SetMode(HLib::pin_mode_t mode, HLib::pin_type_t type){
   uint32_t configBits;
   uint32_t reg;
 
+	CLK_Ctrl(clk, true);
 	if (HLib::GPIO == mode){
 		switch (type){
 			case HLib::IN_FLOATING:    configBits = 0x04; break;
