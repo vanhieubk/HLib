@@ -44,7 +44,35 @@ namespace HLib{
     };
 		
 #elif defined (PLATFORM_MBOARD_ONE)
-  #error "Not defined PIN yet"
+  #define NUM_OF_PIN 34
+	const HLib_LL::pin_ll_c  dfl_pinMap[NUM_OF_PIN] =
+		{ HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 0),  HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 1),  /* In10 - In11 */
+			HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 2),  HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 3),  /* In12 - In13 */
+			HLib_LL::pin_ll_c(CLK_GPIOD, GPIOD, 15), /* TRICK: NC pin */
+			
+			HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 0),  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 1),  /* US2CTS - US2RTS */
+			HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 2),  HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 3),  /* U2Tx - U2Rx */
+			
+			HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 4), HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 5),  /* NSS - SCK */
+			HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 6), HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 7),  /* MISO - MOSI */
+			
+			HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 6), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 12),  /* PC6 - NSS */
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 13), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 14),  /* SCK - MISO */
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 15),/* MOSI */
+			
+			HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 10), HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 15),  /* PC10 - PA15 */
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 3), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 10),  /* PB3 - PB10 */
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 11), /* PB11 */ 
+			
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 1), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 0),  /* CH4 - CH3 */
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 5), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 4),  /* CH2 - CH1 */
+			HLib_LL::pin_ll_c(CLK_GPIOD, GPIOD, 15), /* TRICK: NC pin */
+			
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 6), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 7),  /* PB6 - PB7*/
+			HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 8), HLib_LL::pin_ll_c(CLK_GPIOB, GPIOB, 9),  /* CANRx - CANTx*/
+			
+			HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 9), HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 10)  /* TxD   - RXD, TRICK: MBoard1 seocnd version neednot this trick */  
+		};
 #else
   #error "Unsupported platform"
 #endif
@@ -120,7 +148,7 @@ void PIN_Release(uint8_t pinIndex){
  20        | PB9          |              | (TIM17_CH1)                          
  21        | PB10         |              | (TIM2_CH3)                          
  22        | PB11         |              | (TIM2_CH4)                          
- @param pinIndex Index of the pin
+ @param pinIndex Index of the pin. The pinIndex start from 0
  @param mode Operation mode. Please refer the table pin map for valid configuration
  @param type Type of pin
  @return OK, INVALID

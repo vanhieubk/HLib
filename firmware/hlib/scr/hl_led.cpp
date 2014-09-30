@@ -31,8 +31,11 @@ namespace HLib{
     { HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 11), 
       HLib_LL::pin_ll_c(CLK_GPIOA, GPIOA, 12) };               
 #elif defined (PLATFORM_MBOARD_ONE)
-  #define NUM_OF_LEDS 1  
-  const HLib_LL::pin_ll_c ledsMapTbl[NUM_OF_LEDS] = { HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 4 ) };
+  #define NUM_OF_LEDS 4  
+  const HLib_LL::pin_ll_c ledsMapTbl[NUM_OF_LEDS] = 
+    { HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 4 ),  HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 5 ),
+		  HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 7 ),  HLib_LL::pin_ll_c(CLK_GPIOC, GPIOC, 9 )
+		};
 #else
   #error "Unsupported platform"
 #endif

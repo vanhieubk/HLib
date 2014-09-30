@@ -63,48 +63,7 @@
    application 
   */
 
-#if !defined (STM32F10X_LD) && !defined (STM32F10X_LD_VL) && !defined (STM32F10X_MD) && !defined (STM32F10X_MD_VL) && !defined (STM32F10X_HD) && !defined (STM32F10X_HD_VL) && !defined (STM32F10X_XL) && !defined (STM32F10X_CL) 
-  #if defined (PLATFORM_STM32F100_STARTER)
-  /* #define STM32F10X_LD */     /*!< STM32F10X_LD: STM32 Low density devices */
-    #define STM32F10X_LD_VL   /*!< STM32F10X_LD_VL: STM32 Low density Value Line devices */  
-  /* #define STM32F10X_MD */     /*!< STM32F10X_MD: STM32 Medium density devices */
-  /* #define STM32F10X_MD_VL */  /*!< STM32F10X_MD_VL: STM32 Medium density Value Line devices */  
-  /* #define STM32F10X_HD */     /*!< STM32F10X_HD: STM32 High density devices */
-  /* #define STM32F10X_HD_VL */  /*!< STM32F10X_HD_VL: STM32 High density value line devices */  
-  /* #define STM32F10X_XL */     /*!< STM32F10X_XL: STM32 XL-density devices */
-  /* #define STM32F10X_CL */     /*!< STM32F10X_CL: STM32 Connectivity line devices */
-  #elif defined(PLATFORM_MBOARD_ONE)
-  /* #define STM32F10X_LD */     /*!< STM32F10X_LD: STM32 Low density devices */
-  /* #define STM32F10X_LD_VL */  /*!< STM32F10X_LD_VL: STM32 Low density Value Line devices */  
-  /* #define STM32F10X_MD */     /*!< STM32F10X_MD: STM32 Medium density devices */
-  /* #define STM32F10X_MD_VL */  /*!< STM32F10X_MD_VL: STM32 Medium density Value Line devices */  
-    #define STM32F10X_HD      /*!< STM32F10X_HD: STM32 High density devices */
-  /* #define STM32F10X_HD_VL */  /*!< STM32F10X_HD_VL: STM32 High density value line devices */  
-  /* #define STM32F10X_XL */     /*!< STM32F10X_XL: STM32 XL-density devices */
-  /* #define STM32F10X_CL */     /*!< STM32F10X_CL: STM32 Connectivity line devices */
-  #else
-    #error "Unsupported platform"
-  #endif
-#endif
-/*  Tip: To avoid modifying this file each time you need to switch between these
-        devices, you can define the device in your toolchain compiler preprocessor.
 
- - Low-density devices are STM32F101xx, STM32F102xx and STM32F103xx microcontrollers
-   where the Flash memory density ranges between 16 and 32 Kbytes.
- - Low-density value line devices are STM32F100xx microcontrollers where the Flash
-   memory density ranges between 16 and 32 Kbytes.
- - Medium-density devices are STM32F101xx, STM32F102xx and STM32F103xx microcontrollers
-   where the Flash memory density ranges between 64 and 128 Kbytes.
- - Medium-density value line devices are STM32F100xx microcontrollers where the 
-   Flash memory density ranges between 64 and 128 Kbytes.   
- - High-density devices are STM32F101xx and STM32F103xx microcontrollers where
-   the Flash memory density ranges between 256 and 512 Kbytes.
- - High-density value line devices are STM32F100xx microcontrollers where the 
-   Flash memory density ranges between 256 and 512 Kbytes.   
- - XL-density devices are STM32F101xx and STM32F103xx microcontrollers where
-   the Flash memory density ranges between 512 and 1024 Kbytes.
- - Connectivity line devices are STM32F105xx and STM32F107xx microcontrollers.
-  */
 
 #if !defined (STM32F10X_LD) && !defined (STM32F10X_LD_VL) && !defined (STM32F10X_MD) && !defined (STM32F10X_MD_VL) && !defined (STM32F10X_HD) && !defined (STM32F10X_HD_VL) && !defined (STM32F10X_XL) && !defined (STM32F10X_CL)
  #error "Please select first the target STM32F10x device used in your application (in stm32f10x.h file)"

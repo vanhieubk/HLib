@@ -41,9 +41,20 @@ HLib supports STM32F100_STARTER and MBoard1 currently */
 #ifdef PLATFORM_STM32F100_STARTER
   #define F100_MCU_LINE
   #define STM32F100C8_MCU /**< Used MCU is STM32F100C8 */
+	#if !defined(STM32F10X_LD_VL)
+	  #define  STM32F10X_LD_VL
+	#endif 
+  #define TXD_PIN_INDEX  15
+  #define RXD_PIN_INDEX  16
+
 #elif defined(PLATFORM_MBOARD_ONE)
   #define F103_MCU_LINE
+	#if !defined(STM32F10X_HD)
+	  #define  STM32F10X_HD
+	#endif
   #define STM32F103RCT6_MCU /**< Used MCU is STM32F103RCT6 */
+  #define TXD_PIN_INDEX  32
+  #define RXD_PIN_INDEX  33
 #endif
 
 /** @} */
