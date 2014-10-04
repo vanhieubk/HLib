@@ -64,8 +64,8 @@ err_t CLK_Ctrl(clk_periph_t peripheralClk, bool mode){
 	  case CLK_UART2:   _CLK_APB1Ctrl(RCC_APB1Periph_USART2, mode); break;
 	  case CLK_UART3:   _CLK_APB1Ctrl(RCC_APB1Periph_USART3, mode); break;
 		#ifdef STM32F103RCT6_MCU 
-	  case CLK_UART4:   _CLK_APB1Ctrl(RCC_APB1Periph_USART4, mode); break;
-	  case CLK_UART5:   _CLK_APB1Ctrl(RCC_APB1Periph_USART5, mode); break;
+	  case CLK_UART4:   _CLK_APB1Ctrl(RCC_APB1Periph_UART4, mode); break;
+	  case CLK_UART5:   _CLK_APB1Ctrl(RCC_APB1Periph_UART5, mode); break;
 		#endif
 	  case CLK_I2C1:  	_CLK_APB1Ctrl(RCC_APB1Periph_I2C1,   mode); break;
 	  case CLK_I2C2:  	_CLK_APB1Ctrl(RCC_APB1Periph_I2C2,   mode); break;
