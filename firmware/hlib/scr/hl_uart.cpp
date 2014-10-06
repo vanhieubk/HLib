@@ -51,9 +51,9 @@ err_t  uart_c::Start(uint8_t uartNum, uint32_t baudRate){
     #elif defined(STM32F103RCT6_MCU)
       case 1:  UARTx = USART1; CLK_Ctrl(CLK_UART1, true);break;
       case 2:  UARTx = USART2; CLK_Ctrl(CLK_UART2, true);break;
-      case 3:  UARTx = USART3; CLK_Ctrl(CLK_UART2, true);break;
-      case 4:  UARTx = UART4;  CLK_Ctrl(CLK_UART3, true);break;
-      case 5:  UARTx = UART5;  CLK_Ctrl(CLK_UART4, true);break;
+      case 3:  UARTx = USART3; CLK_Ctrl(CLK_UART3, true);break;
+      case 4:  UARTx = UART4;  CLK_Ctrl(CLK_UART4, true);break;
+      case 5:  UARTx = UART5;  CLK_Ctrl(CLK_UART5, true);break;
 	  #else
       #error "Unsupported platform"
     #endif
@@ -66,7 +66,7 @@ err_t  uart_c::Start(uint8_t uartNum, uint32_t baudRate){
 	USART_InitStruct.USART_StopBits   = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_Cmd(UARTx, DISABLE);
+    USART_Cmd(UARTx, DISABLE);
 	USART_Init(UARTx, &USART_InitStruct);
 	
 	/*enable USART*/
@@ -86,26 +86,25 @@ err_t  uart_c::Shutdown(){
   if (!uartStarted) { return NOT_START;}
  
   USART_Cmd(UARTx, DISABLE);
-	if (USART1 == UARTx){
-		CLK_Ctrl(CLK_UART1, DISABLE);
+  if (USART1 == UARTx){
+	CLK_Ctrl(CLK_UART1, DISABLE);
   }
-	else if (USART2 == UARTx){
-		CLK_Ctrl(CLK_UART2, DISABLE);
+  else if (USART2 == UARTx){
+	CLK_Ctrl(CLK_UART2, DISABLE);
   }
-	#ifdef STM32F103RCT6_MCU
+  #ifdef STM32F103RCT6_MCU
 	else if (USART3 == UARTx){
-		CLK_Ctrl(CLK_UART3, DISABLE);
-  }
-	
+	  CLK_Ctrl(CLK_UART3, DISABLE);
+    }
 	else if (UART4 == UARTx){
-		CLK_Ctrl(CLK_UART4, DISABLE);
-  }
+	  CLK_Ctrl(CLK_UART4, DISABLE);
+    }
 	else if (UART5 == UARTx){
-		CLK_Ctrl(CLK_UART5, DISABLE);
-  }
-	#endif
+	  CLK_Ctrl(CLK_UART5, DISABLE);
+    }
+  #endif
   UARTx 			= NULL;
-	uartStarted = false;
+  uartStarted = false;
   return OK;
 }
 
